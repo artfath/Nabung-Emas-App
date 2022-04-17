@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nabung Emas</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="transaction">Transaction</string>
+    <string name="saving">Saving</string>
+    <string name="about">About</string>
+    <string name="about_statement">Aplikasi ini adalah aplikasi sederhana yang membantu untuk menabung emas.</string>
+    <string name="emas">Emas</string>
+    <string name="transaksi">Transaksi</string>
+    <string name="tabungan">Tabungan</string>
+    <string name="tentang">Tentang</string>
+    <string name="add_item">Add Item</string>
+    <string name="price_hint">Harga Beli *</string>
+    <string name="quantity_hint">Berat Emas *</string>
+    <string name="date">Tanggal *</string>
+    <string name="product">Produk *</string>
+    <string name="cancel">Cancel</string>
+    <string name="category_saving">Tabungan *</string>
+    <string name="forex">Kurs</string>
+    <string name="one_usd">1 USD</string>
+    <string name="rupiah">Rp.</string>
+</resources>

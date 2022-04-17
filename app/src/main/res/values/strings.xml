@@ -1,0 +1,57 @@
+<resources>
+    <string name="app_name">Nabung Emas</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="home">Home</string>
+    <string name="transaction">Transaction</string>
+    <string name="saving">Saving</string>
+    <string name="about">About</string>
+    <string name="about_statement">Aplikasi ini adalah aplikasi sederhana yang membantu untuk menabung emas.</string>
+    <string name="emas">Emas</string>
+    <string name="transaksi">Transaksi</string>
+    <string name="tabungan">Tabungan</string>
+    <string name="tentang">Tentang</string>
+    <string name="add_item">Add Item</string>
+    <string name="price_hint">Harga Beli *</string>
+    <string name="quantity_hint">Berat Emas *</string>
+    <string name="date">Tanggal *</string>
+    <string name="product">Produk *</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
+    <string name="category_saving">Tabungan *</string>
+    <string name="forex">Kurs</string>
+    <string name="one_usd">1 USD</string>
+    <string name="rupiah">Rp.</string>
+    <string name="target">Target Rp. %s</string>
+    <string name="total_target">Total Target Rp. %s</string>
+    <string name="total_saving">Total Saving Rp. %s</string>
+    <string name="percentage">%1$.2f %%</string>
+    <string name="price">Rp. %s</string>
+    <string name="gold_weight">%s gr</string>
+    <string name="summary">Ringkasan</string>
+    <string name="target_tabungan">Target *</string>
+    <string name="add_saving">Add Saving</string>
+    <string name="delete">Delete</string>
+    <string-array name="category_saving">
+        <item>Tabungan Menikah</item>
+        <item>Tabungan Rumah</item>
+        <item>Tabungan Mobil</item>
+        <item>Tabungan Motor</item>
+        <item>Tabungan Haji</item>
+        <item>Tabungan Umroh</item>
+        <item>Tabungan Hari tua</item>
+        <item>Tabungan Pendidikan Anak</item>
+    </string-array>
+    <string-array name="category_product">
+        <item>Antam</item>
+        <item>EOA</item>
+        <item>UBS</item>
+        <item>Lotus Archi</item>
+        <item>Galeri24</item>
+        <item>PAMP</item>
+        <item>Wonderful Wish</item>
+        <item>Perhiasan</item>
+        <item>Emas 24 Karat</item>
+        <item>Emas 18 Karat</item>
+    </string-array>
+</resources>
