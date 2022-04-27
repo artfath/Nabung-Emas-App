@@ -158,18 +158,20 @@ class TransactionViewModel(private val transtionDao: TransactionDao) : ViewModel
             try {
                 dataCategory = transtionDao.findCategorySaving(catagory)
                 Log.d("date category", dataCategory.toString())
-//                dataCategory = data.value!!
 
                 if (dataCategory != null) {
                     val find = transtionDao.findSaving(catagory)
                     Log.d("find saving", find.toString())
+
                     if (find != null) {
                         totalSaving = transtionDao.getSaving(catagory)
                         Log.d("transaction", totalSaving!!.toString())
+
                         if (totalSaving != null) {
                             percentage =
                                 (totalSaving!!.toDouble().div(target.toDouble()).times(100))
                             Log.d("percentage", percentage.toString())
+
                             if (dataCategory!!.savingCategory == catagory) {
                                 val updatedItem =
                                     getUpdatedSaving(

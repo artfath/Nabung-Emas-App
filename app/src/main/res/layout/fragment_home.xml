@@ -43,7 +43,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/margin_between_elements"
-                        android:text="Selamat Menabung Emas"
+                        android:text="@string/selamat_menabung_emas"
                         android:textColor="@color/grey_700" />
                 </LinearLayout>
 
@@ -130,7 +130,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin"
                 android:layout_marginTop="24dp"
-                android:text="Referensi hari Ini"
+                android:text="@string/referensi_hari_ini"
                 android:textColor="@color/grey_700" />
 
 
@@ -183,30 +183,25 @@
                             android:layout_marginTop="@dimen/margin_between_elements"
                             tools:text="Harga PerGram Rp. 900000" />
 
-                        <GridLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/margin_between_elements"
-                            android:columnCount="2">
+
 
                             <TextView
                                 android:id="@+id/tv_price_previous"
-                                style="@style/TextAppearance.MaterialComponents.Body2"
+                                style="@style/TextAppearance.MaterialComponents.Caption"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_column="0"
+                                android:layout_marginTop="@dimen/margin_between_elements"
                                 tools:text="Harga Terakhir Rp. 900000" />
-
-                            <TextView
-                                android:id="@+id/tv_price_difference"
-                                style="@style/TextAppearance.MaterialComponents.Body2"
-                                android:layout_width="wrap_content"
-                                android:layout_height="match_parent"
-                                android:layout_column="1"
-                                android:layout_columnWeight="1"
-                                android:gravity="end"
-                                tools:text=" Rp. 900000" />
-                        </GridLayout>
+                        <TextView
+                            android:id="@+id/tv_price_difference"
+                            style="@style/TextAppearance.MaterialComponents.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/margin_between_elements"
+                            android:gravity="center_vertical"
+                            tools:text=" Rp. 900000"
+                            app:drawableStartCompat="@drawable/ic_up"
+                            app:drawableTint="@color/green_500"/>
 
 
                     </LinearLayout>

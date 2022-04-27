@@ -9,7 +9,7 @@ class GoldViewModelFactory(private val transtionDao: TransactionDao,private val 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(GoldViewModel::class.java)){
             @Suppress("UNCHECKED_CAST")
-            return GoldViewModel(transtionDao, application) as T
+            return GoldViewModel(transtionDao,application) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class")
     }

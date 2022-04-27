@@ -4,10 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.room.ColumnInfo
-import androidx.work.ExistingWorkPolicy
-import androidx.work.PeriodicWorkRequest
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
+import androidx.work.*
 import com.apps.nabungemas.data.GoldCurrenncyTable
 import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.data.TransactionDao
@@ -17,6 +14,7 @@ import com.apps.nabungemas.network.ApiStatus
 import com.apps.nabungemas.network.CurrencyApi
 import com.apps.nabungemas.network.GoldApi
 import com.apps.nabungemas.worker.InternetWorker
+import com.apps.nabungemas.worker.WorkerConstant
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
@@ -24,7 +22,8 @@ class GoldViewModel(
     private val transtionDao: TransactionDao,
     private val application: Application
 ) : ViewModel() {
-    private val workManager = WorkManager.getInstance(application)
+
+    private val workerManager = WorkManager.getInstance(application)
 
     private val _status = MutableLiveData<ApiStatus>()
     val status: LiveData<ApiStatus> = _status
@@ -42,37 +41,40 @@ class GoldViewModel(
         transtionDao.getTotalSaving().asLiveData()
     val allTotalTarget: LiveData<Long?> =
         transtionDao.getTotalTarget().asLiveData()
+    val goldCurrency: LiveData<GoldCurrenncyTable?> =
+        transtionDao.getGoldCurrency().asLiveData()
 
     init {
-        getGoldCurrency()
+        getGoldandCurrency()
 //        getGoldPrice()
 //        getCurrency()
     }
-    private fun getNewGold(
-        currency: Double,
-        prevPrice: Double,
-        priceDifferent: Double,
-        priceGram24k: Double
-    ): GoldCurrenncyTable {
-        return GoldCurrenncyTable(
-            currency = currency,
-            prevPrice = prevPrice,
-            priceDifferent = priceDifferent,
-            priceGram24k = priceGram24k,
-        )
-    }
+//    private fun getNewGold(
+//        currency: Double,
+//        prevPrice: Double,
+//        priceDifferent: Double,
+//        priceGram24k: Double
+//    ): GoldCurrenncyTable {
+//        return GoldCurrenncyTable(
+//            currency = currency,
+//            prevPrice = prevPrice,
+//            priceDifferent = priceDifferent,
+//            priceGram24k = priceGram24k,
+//        )
+//    }
 
     private fun getGoldCurrency() {
         viewModelScope.launch {
             try {
                 val result = transtionDao.findGoldCurrency()
+                Log.d("findGold", result.toString())
                 if(result == null){
-                    getCurrency()
+//                    getCurrency()
                     getGoldPrice()
-                    updateGodCurrency()
+//                    updateGodCurrency()
                 }
             }catch (e:Exception){
-                updateGodCurrency()
+//                updateGodCurrency()
             }
 
         }
@@ -84,47 +86,49 @@ class GoldViewModel(
         }
     }
 
-    private fun updateGodCurrency() {
-        val currency = _currency.value?.exchangeRates?.idr
-        val prevPrice = _gold.value?.prevPrice?.times(currency!!)
-        val prevDifferent = _gold.value?.priceDifferent?.times(currency!!)
-        val price = _gold.value?.priceGram24k?.times(currency!!)
-        val data = getNewGold(currency!!,prevPrice!!,prevDifferent!!,price!!)
-        insertGoldCurrency(data)
-    }
+//    private fun updateGodCurrency() {
+//        val currency = _currency.value?.exchangeRates?.idr
+//        Log.d("currency", currency.toString())
+//        val prevPrice = _gold.value?.prevPrice
+//        val prevDifferent = _gold.value?.priceDifferent
+//        val price = _gold.value?.priceGram24k
+//        val data = getNewGold(currency!!,prevPrice!!,prevDifferent!!,price!!)
+//        Log.d("data insert", data.toString())
+//        insertGoldCurrency(data)
+//    }
 
     internal fun getGoldandCurrency() {
-//        var continuation = workManager
-//            .beginUniqueWork(
-//                REQUEST_DATA,
-//                ExistingWorkPolicy.REPLACE,
-//                PeriodicWorkRequest
-//            )
-//
-//        val work = PeriodicWorkRequestBuilder<InternetWorker>(1, TimeUnit.DAYS)
-//            .build()
+        val constraint = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
 
+        val work = PeriodicWorkRequestBuilder<InternetWorker>(24, TimeUnit.HOURS)
+            .build()
 
+        workerManager.enqueueUniquePeriodicWork(
+                WorkerConstant.NOTIFICATION_CHANNEL_NAME,
+                ExistingPeriodicWorkPolicy.KEEP,
+                work
+            )
     }
 
 
-    private fun getCurrency() {
-        viewModelScope.launch {
-            try {
-                val result = CurrencyApi
-                    .retrofitService
-                    .getCurrency("a71c14c54b464c498d2b0927d81887ce", "USD", "IDR")
-                _currency.value = result
-                _status.value = ApiStatus.SUCCESS
-                Log.d("data", result.toString())
-            } catch (e: Exception) {
-                Log.d("data", "error")
-                _status.value = ApiStatus.ERROR
-            }
-        }
-    }
+//    private fun getCurrency() {
+//        viewModelScope.launch {
+//            try {
+//                val result = GoldApi.retrofitServiceCurrency
+//                    .getCurrency("ed62509897ee6ff3f432b511e61fca34", "USD", "IDR")
+//                _currency.value = result
+//                _status.value = ApiStatus.SUCCESS
+//                Log.d("data currency", result.toString())
+//            } catch (e: Exception) {
+//                Log.d("data currency", "error")
+//                _status.value = ApiStatus.ERROR
+//            }
+//        }
+//    }
 
-    private fun getGoldPrice() {
+    fun getGoldPrice() {
         viewModelScope.launch {
             _status.value = ApiStatus.LOADING
             try {
@@ -138,11 +142,11 @@ class GoldViewModel(
         }
     }
 
-    fun convertPrice(): Double? {
-        val idr = _currency.value?.exchangeRates?.idr
-        val priceGram = _gold.value?.priceGram24k
-        return priceGram?.times(idr!!)
-    }
+//    fun convertPrice(): Double? {
+//        val idr = _currency.value?.exchangeRates?.idr
+//        val priceGram = _gold.value?.priceGram24k
+//        return priceGram?.times(idr!!)
+//    }
 
     fun getPercentage(
         savingTotal: Double?,
@@ -172,6 +176,6 @@ class GoldViewModel(
         }
     }
     companion object{
-        const val REQUEST_DATA="Request data "
+
     }
 }

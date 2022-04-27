@@ -18,6 +18,6 @@ data class GoldPrice(
     val priceGram24k: Double,
 
     @Json(name = "timestamp")
-    val time: Int
+    val time: Long
 
 )

@@ -50,4 +50,7 @@ interface TransactionDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertGoldCurrency(item:GoldCurrenncyTable)
+
+    @Query("SELECT * FROM `gold_currency` ORDER BY id DESC")
+    fun getGoldCurrency():Flow<GoldCurrenncyTable>
 }

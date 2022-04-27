@@ -28,10 +28,15 @@
     <string name="percentage">%1$.2f %%</string>
     <string name="price">Rp. %s</string>
     <string name="gold_weight">%s gr</string>
+    <string name="price_pergram">Harga perGram Rp. %1$.2f</string>
+    <string name="price_previous">Harga Terakhir Rp. %1$.2f</string>
+    <string name="price_double">Rp. %1$.2f</string>
     <string name="summary">Ringkasan</string>
     <string name="target_tabungan">Target *</string>
     <string name="add_saving">Add Saving</string>
     <string name="delete">Delete</string>
+    <string name="selamat_menabung_emas">Selamat Menabung Emas</string>
+    <string name="referensi_hari_ini">Referensi hari Ini</string>
     <string-array name="category_saving">
         <item>Tabungan Menikah</item>
         <item>Tabungan Rumah</item>

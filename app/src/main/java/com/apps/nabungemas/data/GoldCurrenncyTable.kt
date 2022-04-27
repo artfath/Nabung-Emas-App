@@ -15,5 +15,9 @@ data class GoldCurrenncyTable(
     @ColumnInfo(name = "price_difference")
     val priceDifferent: Double,
     @ColumnInfo(name = "price_gram")
-    val priceGram24k: Double
+    val priceGram24k: Double,
+    @ColumnInfo(name = "date_gold")
+    val dateGold: String,
+    @ColumnInfo(name = "date_currency")
+    val dateCurrency: String
 )

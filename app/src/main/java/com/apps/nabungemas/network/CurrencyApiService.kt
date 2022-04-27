@@ -2,13 +2,13 @@ package com.apps.nabungemas.network
 
 import com.apps.nabungemas.model.Currencies
 import retrofit2.http.GET
-import retrofit2.http.Query
+import retrofit2.http.Path
 
 interface CurrencyApiService {
-    @GET("live/")
+    @GET("v6/{access_key}/pair/{base}/{target}")
     suspend fun getCurrency(
-        @Query("api_key") token: String?,
-        @Query("base") base: String?,
-        @Query("target")target: String?
+        @Path("access_key") token: String?,
+        @Path("base") base: String?,
+        @Path("target")target: String?
     ): Currencies
 }

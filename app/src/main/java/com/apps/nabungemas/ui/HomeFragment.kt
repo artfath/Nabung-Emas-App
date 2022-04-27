@@ -48,14 +48,11 @@ class HomeFragment : Fragment() {
         binding.fabAddItem.setOnClickListener {
             view.findNavController().navigate(R.id.action_homeFragment_to_addTransactionFragment)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val time = LocalDateTime.now()
-            val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
 
-            binding.tvSummaryTime.setText(time.format(formatter).toString())
-            binding.tvGoldTime.setText(time.format(formatter).toString())
-            binding.tvKursTime.setText(time.format(formatter).toString())
-        }
+
+
+        binding.tvSummaryTime.setText(getTime())
+
          viewModel.allTotalSaving.observe(viewLifecycleOwner,{
              if(it == null){
                  totalSaving = 0.0
@@ -64,8 +61,6 @@ class HomeFragment : Fragment() {
                  totalSaving = it.toDouble()
                  binding.tvTotalSaving.text = context?.getString(R.string.total_saving,it.toString())
              }
-
-
         })
         viewModel.allTotalTarget.observe(viewLifecycleOwner,{
             if(it == null){
@@ -79,10 +74,33 @@ class HomeFragment : Fragment() {
             }
 
         })
-//        percentage()
-
         viewModel.percentage.observe(viewLifecycleOwner,{
             binding.tvPercentage.text = context?.getString(R.string.percentage,it)
+        })
+        viewModel.goldCurrency.observe(viewLifecycleOwner,{
+            if(it == null){
+                binding.tvPricePergram.text = ""
+                binding.tvPricePrevious.text = ""
+                binding.tvPriceDifference.text = ""
+                binding.tvIdr.text = ""
+                binding.tvGoldTime.setText(getTime())
+                binding.tvKursTime.setText(getTime())
+            }else{
+                binding.tvPricePergram.text = context?.getString(R.string.price_pergram,it.priceGram24k)
+                binding.tvPricePrevious.text = context?.getString(R.string.price_previous,it.prevPrice)
+                binding.tvPriceDifference.text = context?.getString(R.string.price_double,it.priceDifferent)
+                binding.tvIdr.text = context?.getString(R.string.price_double,it.currency)
+                binding.tvGoldTime.setText(it.dateGold)
+                binding.tvKursTime.setText(it.dateCurrency)
+                if(it.priceDifferent <0){
+                    binding.tvPriceDifference.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_down, 0, 0, 0)
+                    binding.tvPriceDifference.getCompoundDrawables()[0].setTint(requireContext().getColor(R.color.red_500))
+                }else{
+                    binding.tvPriceDifference.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_up, 0, 0, 0)
+                    binding.tvPriceDifference.getCompoundDrawables()[0].setTint(requireContext().getColor(R.color.green_500))
+                }
+            }
+
         })
 
 
@@ -91,6 +109,20 @@ class HomeFragment : Fragment() {
 //        })
 
     }
+
+    private fun getTime():String? {
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val timeNow = LocalDateTime.now()
+            val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+            val time = timeNow.format(formatter).toString()
+
+             return time
+
+        } else {
+             return null
+        }
+    }
+
     private fun percentage(){
         try {
             percentage = totalSaving.div(totalTarget).times(100)
