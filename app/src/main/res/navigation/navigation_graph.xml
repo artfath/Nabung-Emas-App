@@ -58,4 +58,9 @@
             app:popUpTo="@id/savingFragment"
             app:popUpToInclusive="true" />
     </fragment>
+    <fragment
+        android:id="@+id/graphFragment"
+        android:name="com.apps.nabungemas.ui.GraphFragment"
+        android:label="fragment_graph"
+        tools:layout="@layout/fragment_graph" />
 </navigation>

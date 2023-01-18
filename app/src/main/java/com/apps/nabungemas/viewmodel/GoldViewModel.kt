@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 class GoldViewModel(
     private val transtionDao: TransactionDao,
-    private val application: Application
+    application: Application
 ) : ViewModel() {
 
     private val workerManager = WorkManager.getInstance(application)
@@ -49,19 +49,6 @@ class GoldViewModel(
 //        getGoldPrice()
 //        getCurrency()
     }
-//    private fun getNewGold(
-//        currency: Double,
-//        prevPrice: Double,
-//        priceDifferent: Double,
-//        priceGram24k: Double
-//    ): GoldCurrenncyTable {
-//        return GoldCurrenncyTable(
-//            currency = currency,
-//            prevPrice = prevPrice,
-//            priceDifferent = priceDifferent,
-//            priceGram24k = priceGram24k,
-//        )
-//    }
 
     private fun getGoldCurrency() {
         viewModelScope.launch {
@@ -103,11 +90,12 @@ class GoldViewModel(
             .build()
 
         val work = PeriodicWorkRequestBuilder<InternetWorker>(24, TimeUnit.HOURS)
+            .setConstraints(constraint)
             .build()
 
         workerManager.enqueueUniquePeriodicWork(
                 WorkerConstant.NOTIFICATION_CHANNEL_NAME,
-                ExistingPeriodicWorkPolicy.KEEP,
+                ExistingPeriodicWorkPolicy.REPLACE,
                 work
             )
     }

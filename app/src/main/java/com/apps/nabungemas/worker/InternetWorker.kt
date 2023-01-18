@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.apps.nabungemas.DataApplication
 import com.apps.nabungemas.data.GoldCurrenncyTable
 import com.apps.nabungemas.data.TransactionRoomDatabase
 import com.apps.nabungemas.network.CurrencyApi
@@ -21,6 +22,7 @@ import com.apps.nabungemas.data.TransactionDao as TransactionDao1
 class InternetWorker(context: Context,params:WorkerParameters):CoroutineWorker(context,params) {
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
         val notification = WorkerUtils()
+        val database = DataApplication().database
 
         try {
             notification.statusNotification("Retrieve Data",applicationContext)
@@ -46,7 +48,7 @@ class InternetWorker(context: Context,params:WorkerParameters):CoroutineWorker(c
                         dateGold = dateGold,
                         dateCurrency = dateCurrency
                     )
-                    TransactionRoomDatabase.getDatabase(applicationContext).transactionDao().insertGoldCurrency(goldCurrency)
+                    database.transactionDao().insertGoldCurrency(goldCurrency)
                     Log.d("gold await",goldCurrency.toString())
                 }
 //            }

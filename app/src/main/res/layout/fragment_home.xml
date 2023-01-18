@@ -108,7 +108,7 @@
                         <View
                             android:layout_width="2dp"
                             android:layout_height="match_parent"
-                            android:background="@color/grey_500" />
+                            android:background="@color/blue_200" />
 
                         <TextView
                             android:id="@+id/tv_percentage"

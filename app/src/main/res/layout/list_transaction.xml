@@ -55,7 +55,7 @@
                     android:layout_columnWeight="1"
                     android:textStyle="bold"
                     android:gravity="end"
-                    android:textColor="#7C7C7C"
+                    android:textColor="@color/black"
                     tools:text="100000"/>
             </GridLayout>
             <GridLayout
@@ -69,7 +69,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_column="0"
-                    android:textColor="#7C7C7C"
+                    android:textColor="@color/yellow_700"
                     tools:text="Emas Antam"/>
                 <TextView
                     android:id="@+id/tv_quantity"
@@ -80,7 +80,7 @@
                     android:gravity="end"
                     android:layout_column="1"
                     android:layout_columnWeight="1"
-                    android:textColor="#7C7C7C"
+                    android:textColor="@color/blue_700"
                     tools:text="1.2 gr"/>
             </GridLayout>
 

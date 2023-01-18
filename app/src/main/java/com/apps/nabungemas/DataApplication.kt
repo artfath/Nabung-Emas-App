@@ -7,4 +7,5 @@ class DataApplication: Application() {
     val database:TransactionRoomDatabase by lazy {
         TransactionRoomDatabase.getDatabase(this)
     }
+
 }
