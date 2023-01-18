@@ -313,7 +313,6 @@ fun CurrencyCard() {
     Box(
         Modifier
             .fillMaxWidth()
-
             .padding(16.dp)
             .shadow(6.dp)
             .clip(RoundedCornerShape(6.dp))
@@ -390,7 +389,7 @@ fun HomeScreen(
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun HomePreview() {
     MyApplicationTheme(darkTheme = false) {
         Column() {
             Header(modifier = Modifier,listOf("90000", "80000","19 januari 2023","40"))
