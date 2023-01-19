@@ -3,23 +3,26 @@ package com.apps.nabungemas.viewmodel
 import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
-import androidx.room.ColumnInfo
 import androidx.work.*
 import com.apps.nabungemas.data.GoldCurrenncyTable
-import com.apps.nabungemas.data.SavingTable
-import com.apps.nabungemas.data.TransactionDao
 import com.apps.nabungemas.model.Currencies
 import com.apps.nabungemas.model.GoldPrice
 import com.apps.nabungemas.network.ApiStatus
-import com.apps.nabungemas.network.CurrencyApi
 import com.apps.nabungemas.network.GoldApi
+import com.apps.nabungemas.repository.TransactionsRepository
 import com.apps.nabungemas.worker.InternetWorker
 import com.apps.nabungemas.worker.WorkerConstant
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
+
 class GoldViewModel(
-    private val transtionDao: TransactionDao,
+//    private val transactionDao: TransactionDao,
+    private val repository: TransactionsRepository,
     application: Application
 ) : ViewModel() {
 
@@ -38,11 +41,16 @@ class GoldViewModel(
     val percentage: LiveData<Double> = _percentage
 
     val allTotalSaving: LiveData<Long?> =
-        transtionDao.getTotalSaving().asLiveData()
+        repository.getTotalSaving().asLiveData()
     val allTotalTarget: LiveData<Long?> =
-        transtionDao.getTotalTarget().asLiveData()
+        repository.getTotalTarget().asLiveData()
     val goldCurrency: LiveData<GoldCurrenncyTable?> =
-        transtionDao.getGoldCurrency().asLiveData()
+        repository.getGoldCurrency().asLiveData()
+
+    val allTargetState: Flow<Long?> = repository.getTotalTarget()
+    val allSavingState: Flow<Long?> = repository.getTotalSaving()
+    private val _percentState = MutableStateFlow("")
+    val percentState: StateFlow<String> = _percentState.asStateFlow()
 
     init {
         getGoldandCurrency()
@@ -53,7 +61,7 @@ class GoldViewModel(
     private fun getGoldCurrency() {
         viewModelScope.launch {
             try {
-                val result = transtionDao.findGoldCurrency()
+                val result = repository.findGoldCurrency()
                 Log.d("findGold", result.toString())
                 if(result == null){
 //                    getCurrency()
@@ -69,7 +77,7 @@ class GoldViewModel(
     }
     private fun insertGoldCurrency(item:GoldCurrenncyTable){
         viewModelScope.launch {
-            transtionDao.insertGoldCurrency(item)
+            repository.insertGoldCurrency(item)
         }
     }
 
@@ -150,20 +158,35 @@ class GoldViewModel(
 //            val target =targetTotal.value
 //            val saving = savingTotal.value
                 if (savingTotal == 0.0 || targetTotal == 0.0) {
-                    _percentage.value = 0.0
+//                    _percentage.value = 0.0
+                    _percentState.value = "0 %"
                     Log.d("data", _percentage.value.toString())
                 } else {
-
-                    _percentage.value = savingTotal?.div(targetTotal!!)?.times(100)
-
+//                    _percentage.value = savingTotal?.div(targetTotal!!)?.times(100)
+                     val doublePercent = savingTotal?.div(targetTotal!!)?.times(100)!!
+                    _percentState.value = String.format("%.2f %", doublePercent)
                 }
 
             } catch (e: Exception) {
-                _percentage.value = 0.0
+//                _percentage.value = 0.0
+                _percentState.value = "0 %"
             }
         }
     }
-    companion object{
 
-    }
+//    companion object {
+//        val Factory: ViewModelProvider.Factory = viewModelFactory {
+//            initializer {
+////                val transactionDao = (this[APPLICATION_KEY] as DataApplication).database.transactionDao()
+//                val application = this[APPLICATION_KEY] as DataApplication
+//                GoldViewModel(
+//                    repository = DataApplication().container.transactionsRepository,
+//                    application = application
+//                )
+//            }
+//        }
+//    }
 }
+
+
+
