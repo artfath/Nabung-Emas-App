@@ -198,7 +198,7 @@ fun TransactionScreen() {
                 version = 1,
                 navigateUp = {})
         },
-        backgroundColor = Color(0xFFFFFDF5)
+        backgroundColor = Color(0xFFF4F9FB)
     )
     { innerPadding ->
         TransactionBody(
