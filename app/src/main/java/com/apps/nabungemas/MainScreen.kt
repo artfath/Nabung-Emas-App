@@ -30,12 +30,14 @@ fun MainScreen() {
 fun MainTopAppBar(
     modifier: Modifier = Modifier,
     title: String,
-    navigateBack: Int,
+    version: Int,
     navigateUp: () -> Unit = {}
 ) {
-    if (navigateBack == 0) {
+    if (version == 0) {
         CenterAlignedTopAppBar(
-            title = { Text(text = title) },
+            title = { Text(text = title,
+                color = Color.White,
+                style = MaterialTheme.typography.h6) },
             modifier = modifier.fillMaxWidth(),
             navigationIcon = {
                 IconButton(onClick = { navigateUp }) {
@@ -45,13 +47,15 @@ fun MainTopAppBar(
                     )
                 }
             },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors()
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = Color(0xFFffd740))
 
         )
 
-    } else if (navigateBack == 1) {
+    } else if (version == 1) {
         CenterAlignedTopAppBar(
-            title = { Text(text = title, color = Color.White) },
+            title = { Text(text = title, color = Color.White,
+            style = MaterialTheme.typography.h6) },
             modifier = modifier.fillMaxWidth(),
             actions = {
                 IconButton(onClick = {  }) {
@@ -75,7 +79,11 @@ fun MainTopAppBar(
         )
 
     } else {
-        CenterAlignedTopAppBar(title = { Text(text = title) }, modifier = modifier)
+        CenterAlignedTopAppBar(title = { Text(text = title, color = Color.White,
+            style = MaterialTheme.typography.h6) },
+            modifier = modifier,
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
+                containerColor = Color(0xFFffd740)))
     }
 }
 @Preview(showBackground = true)
@@ -83,9 +91,9 @@ fun MainTopAppBar(
 fun MainTopAppBar(){
     MyApplicationTheme(darkTheme = false) {
         Column() {
-            MainTopAppBar(title = "Top Bar", navigateBack = 0)
-            MainTopAppBar(title = "Top Bar", navigateBack = 1)
-            MainTopAppBar(title = "Top Bar", navigateBack = 2)
+            MainTopAppBar(title = "Top Bar", version = 0)
+            MainTopAppBar(title = "Top Bar", version = 1)
+            MainTopAppBar(title = "Top Bar", version = 2)
         }
 
     }

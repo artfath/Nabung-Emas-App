@@ -168,8 +168,6 @@ class HomeFragment : Fragment() {
 @Composable
 fun Header(modifier: Modifier,
            list:List<String>) {
-
-
     BoxWithConstraints(
         modifier = modifier
     ) {

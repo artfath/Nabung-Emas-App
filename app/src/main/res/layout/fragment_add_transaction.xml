@@ -187,7 +187,7 @@
                     android:layout_gravity="center"
                     android:gravity="center"
                     android:layout_column="1"
-                    android:text="gram" />
+                    android:text="@string/grams" />
             </GridLayout>
 
 

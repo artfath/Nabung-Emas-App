@@ -37,6 +37,7 @@
     <string name="delete">Delete</string>
     <string name="selamat_menabung_emas">Selamat Menabung Emas</string>
     <string name="referensi_hari_ini">Referensi hari Ini</string>
+    <string name="grams">gram</string>
     <string-array name="category_saving">
         <item>Tabungan Menikah</item>
         <item>Tabungan Rumah</item>

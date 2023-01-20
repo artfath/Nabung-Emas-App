@@ -195,7 +195,7 @@ fun TransactionScreen() {
         topBar = {
             MainTopAppBar(
                 title = "Transaction",
-                navigateBack = 1,
+                version = 1,
                 navigateUp = {})
         },
         backgroundColor = Color(0xFFFFFDF5)
