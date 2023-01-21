@@ -21,9 +21,15 @@ import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
 import com.apps.nabungemas.databinding.FragmentGraphBinding
 import com.apps.nabungemas.network.GoldPriceApi
+import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import kotlinx.coroutines.launch
 
+object GraphDestination: NavigationDestination {
+    override val route: String = "graph"
+    override val title: Int = R.string.graph
+
+}
 
 class GraphFragment : Fragment() {
 //    private var _binding: FragmentGraphBinding? = null

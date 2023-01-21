@@ -34,84 +34,111 @@ import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.data.TransactionTable
 import com.apps.nabungemas.databinding.FragmentSavingBinding
 import com.apps.nabungemas.ui.adapter.SavingListAdapter
+import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import com.apps.nabungemas.viewmodel.TransactionViewModel
 import com.apps.nabungemas.viewmodel.TransactionViewModelFactory
 
+object SavingDestination: NavigationDestination {
+    override val route: String = "saving"
+    override val title: Int = R.string.saving
 
-class SavingFragment : Fragment() {
-    private val viewModel: TransactionViewModel by activityViewModels {
-        TransactionViewModelFactory(
-            (activity?.application as DataApplication).database.transactionDao()
-        )
-    }
-    private var _binding: FragmentSavingBinding? = null
-
-    private val binding get() = _binding!!
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-//        _binding= FragmentSavingBinding.inflate(inflater,container,false)
-//        val view = binding.root
-//        return view
-        return ComposeView(requireContext()).apply {
-            setContent {
-                MyApplicationTheme(darkTheme = false) {
-                    SavingScreen()
-                }
-            }
-        }
-    }
-
-
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        val adapter = SavingListAdapter()
-//        viewModel.allSaving.observe(viewLifecycleOwner,{
-//            adapter.submitList(it)
-//        })
-////        viewModel.getSaving("Tabungan Rumah")
-////        viewModel.saving.observe(viewLifecycleOwner,{
-////            Log.e("data", it.toString())
-////
-////        })
-////        viewModel.data.observe(viewLifecycleOwner,{
-////            Log.d("dat table",it.toString())
-////        })
-//
-//
-//        binding.apply {
-//            rvSaving.setHasFixedSize(true)
-//            rvSaving.adapter = adapter
-//
-//        }
-//        topMenu()
+}
+//class SavingFragment : Fragment() {
+//    private val viewModel: TransactionViewModel by activityViewModels {
+//        TransactionViewModelFactory(
+//            (activity?.application as DataApplication).database.transactionDao()
+//        )
 //    }
+//    private var _binding: FragmentSavingBinding? = null
 //
-//    private fun topMenu() {
-//        binding.toolbar.setOnMenuItemClickListener {
-//            when(it.itemId){
-//                R.id.add ->{
-//                    findNavController().navigate(R.id.action_savingFragment_to_addSavingFragment)
-//                    true
+//    private val binding get() = _binding!!
+//
+//
+//    override fun onCreateView(
+//        inflater: LayoutInflater, container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        // Inflate the layout for this fragment
+////        _binding= FragmentSavingBinding.inflate(inflater,container,false)
+////        val view = binding.root
+////        return view
+//        return ComposeView(requireContext()).apply {
+//            setContent {
+//                MyApplicationTheme(darkTheme = false) {
+//                    SavingScreen()
 //                }
-//                else -> false
 //            }
 //        }
 //    }
 //
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
-
-
+//
+//
+////    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+////        super.onViewCreated(view, savedInstanceState)
+////        val adapter = SavingListAdapter()
+////        viewModel.allSaving.observe(viewLifecycleOwner,{
+////            adapter.submitList(it)
+////        })
+//////        viewModel.getSaving("Tabungan Rumah")
+//////        viewModel.saving.observe(viewLifecycleOwner,{
+//////            Log.e("data", it.toString())
+//////
+//////        })
+//////        viewModel.data.observe(viewLifecycleOwner,{
+//////            Log.d("dat table",it.toString())
+//////        })
+////
+////
+////        binding.apply {
+////            rvSaving.setHasFixedSize(true)
+////            rvSaving.adapter = adapter
+////
+////        }
+////        topMenu()
+////    }
+////
+////    private fun topMenu() {
+////        binding.toolbar.setOnMenuItemClickListener {
+////            when(it.itemId){
+////                R.id.add ->{
+////                    findNavController().navigate(R.id.action_savingFragment_to_addSavingFragment)
+////                    true
+////                }
+////                else -> false
+////            }
+////        }
+////    }
+////
+////    override fun onDestroyView() {
+////        super.onDestroyView()
+////        _binding = null
+////    }
+//
+//
+//}
+@Composable
+fun SavingScreen(navigateToAddSaving:()->Unit) {
+    Scaffold(
+        topBar = {
+            MainTopAppBar(
+                title = "Saving",
+                version = 1,
+                navigateAdd = navigateToAddSaving)
+        },
+        backgroundColor = Color(0xFFF4F9FB)
+    )
+    { innerPadding ->
+        SavingBody(
+            itemList = listOf(
+                TransactionTable(0,"20 januari 2023","tabungan menikah",20000,1.0,"antam"),
+                TransactionTable(1,"20 januari 2023","tabungan menikah",20000,1.0,"antam")
+            ),
+            modifier = Modifier.padding(innerPadding)
+        )
+    }
 }
+
 @Composable
 fun SavingBody(
     itemList: List<TransactionTable>,
@@ -210,32 +237,12 @@ fun SavingItem(modifier: Modifier,
 fun SavingItemPreview(){
     SavingItem(modifier = Modifier, transaction = TransactionTable(0,"20 januari 2023","tabungan menikah",20000,1.0,"antam"))
 }
-@Composable
-fun SavingScreen() {
-    Scaffold(
-        topBar = {
-            MainTopAppBar(
-                title = "Saving",
-                version = 1,
-                navigateUp = {})
-        },
-        backgroundColor = Color(0xFFF4F9FB)
-    )
-    { innerPadding ->
-        SavingBody(
-            itemList = listOf(
-                TransactionTable(0,"20 januari 2023","tabungan menikah",20000,1.0,"antam"),
-                TransactionTable(1,"20 januari 2023","tabungan menikah",20000,1.0,"antam")
-            ),
-            modifier = Modifier.padding(innerPadding)
-        )
-    }
-}
+
 
 @Preview(showBackground = true)
 @Composable
 fun SavingPreview() {
     MyApplicationTheme(darkTheme = false) {
-        SavingScreen()
+        SavingScreen(navigateToAddSaving = {})
     }
 }

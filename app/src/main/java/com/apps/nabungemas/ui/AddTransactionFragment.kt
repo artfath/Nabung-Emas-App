@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
@@ -31,131 +32,134 @@ import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import org.w3c.dom.Text
 
 
-class AddTransactionFragment : Fragment() {
-//    private val viewModel:TransactionViewModel by activityViewModels {
-//        TransactionViewModelFactory((activity?.application as DataApplication).database.transactionDao())
-//    }
+//class AddTransactionFragment : Fragment() {
+////    private val viewModel:TransactionViewModel by activityViewModels {
+////        TransactionViewModelFactory((activity?.application as DataApplication).database.transactionDao())
+////    }
+////
+////
+////    private var _binding: FragmentAddTransactionBinding? = null
+////    private val binding get() = _binding!!
 //
 //
-//    private var _binding: FragmentAddTransactionBinding? = null
-//    private val binding get() = _binding!!
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-//        _binding = FragmentAddTransactionBinding.inflate(inflater,container,false)
-//        val view = binding.root
-//        return view
-        return ComposeView(requireContext()).apply {
-            setContent {
-                MyApplicationTheme(darkTheme = false) {
-                    AddTransactionScreen()
-                }
-            }
-        }
-    }
-
-
-//    @RequiresApi(Build.VERSION_CODES.N)
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        binding.btnSave.setOnClickListener {
-//            addNewTransaction()
-//        }
-//        binding.btnCancel.setOnClickListener {
-//            findNavController().navigateUp()
-//        }
-//
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val time = LocalDateTime.now()
-//            val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-//
-//            binding.etDate.setText(time.format(formatter).toString(), TextView.BufferType.SPANNABLE)
-//        }
-//
-//        val items = resources.getStringArray(R.array.category_saving).toList()
-//        val adapter = ArrayAdapter(requireContext(), R.layout.list_dropdown, items)
-//        binding.tvCategory.setAdapter(adapter)
-//
-//        val products = resources.getStringArray(R.array.category_product).toList()
-//        val adapterProduct = ArrayAdapter(requireContext(), R.layout.list_dropdown, products)
-//        binding.tvProduct.setAdapter(adapterProduct)
-//
-//        binding.btnDate.setOnClickListener {
-//            val datePicker =
-//                MaterialDatePicker.Builder.datePicker()
-//                    .setTitleText("Select date")
-//                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
-//                    .build()
-//
-//            datePicker.addOnPositiveButtonClickListener {
-//                // Respond to positive button click.
-//                val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.US)
-//                val date = dateFormatter.format(Date(it))
-//                binding.etDate.setText(date)
-//                Toast.makeText(context, "$date is selected", Toast.LENGTH_LONG).show()
+//    override fun onCreateView(
+//        inflater: LayoutInflater, container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        // Inflate the layout for this fragment
+////        _binding = FragmentAddTransactionBinding.inflate(inflater,container,false)
+////        val view = binding.root
+////        return view
+//        return ComposeView(requireContext()).apply {
+//            setContent {
+//                MyApplicationTheme(darkTheme = false) {
+//                    AddTransactionScreen()
+//                }
 //            }
-//            datePicker.addOnNegativeButtonClickListener {
-//                // Respond to negative button click.
-//            }
-//            datePicker.addOnCancelListener {
-//                // Respond to cancel button click.
-//            }
-//            datePicker.addOnDismissListener {
-//                // Respond to dismiss events.
-//            }
-//            datePicker.show(parentFragmentManager,"tag")
 //        }
 //    }
 //
 //
+////    @RequiresApi(Build.VERSION_CODES.N)
+////    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+////        super.onViewCreated(view, savedInstanceState)
+////        binding.btnSave.setOnClickListener {
+////            addNewTransaction()
+////        }
+////        binding.btnCancel.setOnClickListener {
+////            findNavController().navigateUp()
+////        }
+////
+////        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+////            val time = LocalDateTime.now()
+////            val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+////
+////            binding.etDate.setText(time.format(formatter).toString(), TextView.BufferType.SPANNABLE)
+////        }
+////
+////        val items = resources.getStringArray(R.array.category_saving).toList()
+////        val adapter = ArrayAdapter(requireContext(), R.layout.list_dropdown, items)
+////        binding.tvCategory.setAdapter(adapter)
+////
+////        val products = resources.getStringArray(R.array.category_product).toList()
+////        val adapterProduct = ArrayAdapter(requireContext(), R.layout.list_dropdown, products)
+////        binding.tvProduct.setAdapter(adapterProduct)
+////
+////        binding.btnDate.setOnClickListener {
+////            val datePicker =
+////                MaterialDatePicker.Builder.datePicker()
+////                    .setTitleText("Select date")
+////                    .setSelection(MaterialDatePicker.todayInUtcMilliseconds())
+////                    .build()
+////
+////            datePicker.addOnPositiveButtonClickListener {
+////                // Respond to positive button click.
+////                val dateFormatter = SimpleDateFormat("dd MMM yyyy", Locale.US)
+////                val date = dateFormatter.format(Date(it))
+////                binding.etDate.setText(date)
+////                Toast.makeText(context, "$date is selected", Toast.LENGTH_LONG).show()
+////            }
+////            datePicker.addOnNegativeButtonClickListener {
+////                // Respond to negative button click.
+////            }
+////            datePicker.addOnCancelListener {
+////                // Respond to cancel button click.
+////            }
+////            datePicker.addOnDismissListener {
+////                // Respond to dismiss events.
+////            }
+////            datePicker.show(parentFragmentManager,"tag")
+////        }
+////    }
+////
+////
+////
+////    private fun addNewTransaction() {
+////        if(isEntryValid()){
+////            viewModel.addNewTransaction(
+////                binding.tvCategory.text.toString(),
+////                binding.etDate.text.toString(),
+////                binding.etPrice.text.toString(),
+////                binding.etQuantity.text.toString(),
+////                binding.tvProduct.text.toString()
+////            )
+////            findNavController().navigateUp()
+////        }
+////    }
+////
+////    private fun isEntryValid(): Boolean {
+////        return viewModel.isEntryValid(
+////            binding.tvCategory.text.toString(),
+////            binding.etDate.text.toString(),
+////            binding.etPrice.text.toString(),
+////            binding.etQuantity.text.toString(),
+////            binding.tvProduct.text.toString()
+////        )
+////    }
+////
+////    override fun onDestroyView() {
+////        super.onDestroyView()
+////        // Hide keyboard.
+////        val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as
+////                InputMethodManager
+////        inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
+////        _binding = null
+////    }
 //
-//    private fun addNewTransaction() {
-//        if(isEntryValid()){
-//            viewModel.addNewTransaction(
-//                binding.tvCategory.text.toString(),
-//                binding.etDate.text.toString(),
-//                binding.etPrice.text.toString(),
-//                binding.etQuantity.text.toString(),
-//                binding.tvProduct.text.toString()
-//            )
-//            findNavController().navigateUp()
-//        }
-//    }
 //
-//    private fun isEntryValid(): Boolean {
-//        return viewModel.isEntryValid(
-//            binding.tvCategory.text.toString(),
-//            binding.etDate.text.toString(),
-//            binding.etPrice.text.toString(),
-//            binding.etQuantity.text.toString(),
-//            binding.tvProduct.text.toString()
-//        )
-//    }
-//
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        // Hide keyboard.
-//        val inputMethodManager = requireActivity().getSystemService(Context.INPUT_METHOD_SERVICE) as
-//                InputMethodManager
-//        inputMethodManager.hideSoftInputFromWindow(requireActivity().currentFocus?.windowToken, 0)
-//        _binding = null
-//    }
-
-
-}
+//}
 
 @Composable
-fun AddTransactionScreen() {
+fun AddTransactionScreen(
+    navigateBack:()->Unit,
+    onNavigateUp:()->Unit
+) {
     Scaffold(
         topBar = {
             MainTopAppBar(
                 title = "Add Transaction",
-                version = 2,
-                navigateUp = {})
+                version = 0,
+                navigateUp = onNavigateUp)
         },
         backgroundColor = Color(0xFFFFFDF5)
     )
@@ -348,8 +352,12 @@ fun AddTransactionBody(
                     .weight(1f)
                     .height(56.dp),
                 onClick = { /*TODO*/ },
-                border = BorderStroke(2.dp, Color(0xFFffd740)),
-                shape = RoundedCornerShape(10.dp)
+                border = BorderStroke(2.dp, colorResource(id = R.color.yellow_500)),
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    contentColor = colorResource(id = R.color.yellow_500),
+                    backgroundColor = Color.White
+                )
             ) {
                 Icon(
                     ImageVector.vectorResource(id = R.drawable.ic_cancel),
@@ -360,12 +368,17 @@ fun AddTransactionBody(
                 Text(text = stringResource(id = R.string.cancel))
             }
             Spacer(modifier = modifier.width(16.dp))
+
             Button(
                 modifier = modifier
                     .weight(1f)
                     .height(56.dp),
                 onClick = { /*TODO*/ },
-                shape = RoundedCornerShape(10.dp)
+                shape = RoundedCornerShape(10.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.yellow_500),
+                    contentColor = Color.White
+                )
             ) {
                 Icon(
                     ImageVector.vectorResource(id = R.drawable.ic_save),
@@ -383,6 +396,6 @@ fun AddTransactionBody(
 @Composable
 fun AddTransactionPreview() {
     MyApplicationTheme(darkTheme = false) {
-        AddTransactionScreen()
+        AddTransactionScreen(navigateBack = {}, onNavigateUp = {})
     }
 }

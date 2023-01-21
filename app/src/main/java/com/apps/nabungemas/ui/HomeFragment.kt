@@ -10,15 +10,15 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -28,6 +28,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.findNavController
 import androidx.room.util.TableInfo
 import com.apps.nabungemas.R
+import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import com.apps.nabungemas.utils.Time
 import com.apps.nabungemas.utils.Time.getTime
@@ -36,133 +37,192 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
-class HomeFragment : Fragment() {
-    //    private val viewModel: GoldViewModel by activityViewModels {
-//        GoldViewModelFactory(
-//            (activity?.application as DataApplication).database.transactionDao(),
-//            requireActivity().application
-//        )
-//    }
-    private var totalSaving = 0.0
-    private var totalTarget = 0.0
-    private var percentage: Double? = null
+object HomeDestination:NavigationDestination{
+    override val route: String = "home"
+    override val title: Int = R.string.home
 
-//    private var _binding: FragmentHomeBinding? = null
-//    private val binding get() = _binding!!
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-//        _binding= FragmentHomeBinding.inflate(inflater,container,false)
-//        val view = binding.root
-//        return view
-        return ComposeView(requireContext()).apply {
-            setContent {
-                MyApplicationTheme(darkTheme = false) {
-                    HomeScreen()
-                }
-            }
-        }
-    }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        binding.fabAddItem.setOnClickListener {
-//            view.findNavController().navigate(R.id.action_homeFragment_to_addTransactionFragment)
-//        }
+}
+//class HomeFragment : Fragment() {
+//    //    private val viewModel: GoldViewModel by activityViewModels {
+////        GoldViewModelFactory(
+////            (activity?.application as DataApplication).database.transactionDao(),
+////            requireActivity().application
+////        )
+////    }
+//    private var totalSaving = 0.0
+//    private var totalTarget = 0.0
+//    private var percentage: Double? = null
 //
+////    private var _binding: FragmentHomeBinding? = null
+////    private val binding get() = _binding!!
 //
-//
-//        binding.tvSummaryTime.setText(getTime())
-//
-//         viewModel.allTotalSaving.observe(viewLifecycleOwner,{
-//             if(it == null){
-//                 totalSaving = 0.0
-//                 binding.tvTotalSaving.text = context?.getString(R.string.total_saving,"0")
-//             }else{
-//                 totalSaving = it.toDouble()
-//                 binding.tvTotalSaving.text = context?.getString(R.string.total_saving,it.toString())
-//             }
-//        })
-//        viewModel.allTotalTarget.observe(viewLifecycleOwner,{
-//            if(it == null){
-//                totalTarget = 0.0
-//                binding.tvTotalTarget.text = context?.getString(R.string.total_target,"0")
-//                viewModel.getPercentage(totalSaving,totalTarget)
-//            }else{
-//                totalTarget = it.toDouble()
-//                binding.tvTotalTarget.text = context?.getString(R.string.total_target,it.toString())
-//                viewModel.getPercentage(totalSaving,totalTarget)
-//            }
-//
-//        })
-//        viewModel.percentage.observe(viewLifecycleOwner,{
-//            binding.tvPercentage.text = context?.getString(R.string.percentage,it)
-//        })
-//        viewModel.goldCurrency.observe(viewLifecycleOwner,{
-//            if(it == null){
-//                binding.tvPricePergram.text = ""
-//                binding.tvPricePrevious.text = ""
-//                binding.tvPriceDifference.text = ""
-//                binding.tvIdr.text = ""
-//                binding.tvGoldTime.setText(getTime())
-//                binding.tvKursTime.setText(getTime())
-//            }else{
-//                binding.tvPricePergram.text = context?.getString(R.string.price_pergram,it.priceGram24k)
-//                binding.tvPricePrevious.text = context?.getString(R.string.price_previous,it.prevPrice)
-//                binding.tvPriceDifference.text = context?.getString(R.string.price_double,it.priceDifferent)
-//                binding.tvIdr.text = context?.getString(R.string.price_double,it.currency)
-//                binding.tvGoldTime.setText(it.dateGold)
-//                binding.tvKursTime.setText(it.dateCurrency)
-//                if(it.priceDifferent <0){
-//                    binding.tvPriceDifference.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_down, 0, 0, 0)
-//                    binding.tvPriceDifference.getCompoundDrawables()[0].setTint(requireContext().getColor(R.color.red_500))
-//                }else{
-//                    binding.tvPriceDifference.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_up, 0, 0, 0)
-//                    binding.tvPriceDifference.getCompoundDrawables()[0].setTint(requireContext().getColor(R.color.green_500))
+//    override fun onCreateView(
+//        inflater: LayoutInflater, container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        // Inflate the layout for this fragment
+////        _binding= FragmentHomeBinding.inflate(inflater,container,false)
+////        val view = binding.root
+////        return view
+//        return ComposeView(requireContext()).apply {
+//            setContent {
+//                MyApplicationTheme(darkTheme = false) {
+//                    HomeScreen()
 //                }
 //            }
-//
-//        })
-
-
-//        transactionViewModel.savingnikah.observe(viewLifecycleOwner,{
-//            binding.tvTotal.text = it.toString()
-//        })
-
-//    }
-
-//    private fun getTime(): String? {
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//            val timeNow = LocalDateTime.now()
-//            val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
-//            val time = timeNow.format(formatter).toString()
-//
-//            return time
-//
-//        } else {
-//            return null
 //        }
 //    }
+//
+////    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+////        super.onViewCreated(view, savedInstanceState)
+////        binding.fabAddItem.setOnClickListener {
+////            view.findNavController().navigate(R.id.action_homeFragment_to_addTransactionFragment)
+////        }
+////
+////
+////
+////        binding.tvSummaryTime.setText(getTime())
+////
+////         viewModel.allTotalSaving.observe(viewLifecycleOwner,{
+////             if(it == null){
+////                 totalSaving = 0.0
+////                 binding.tvTotalSaving.text = context?.getString(R.string.total_saving,"0")
+////             }else{
+////                 totalSaving = it.toDouble()
+////                 binding.tvTotalSaving.text = context?.getString(R.string.total_saving,it.toString())
+////             }
+////        })
+////        viewModel.allTotalTarget.observe(viewLifecycleOwner,{
+////            if(it == null){
+////                totalTarget = 0.0
+////                binding.tvTotalTarget.text = context?.getString(R.string.total_target,"0")
+////                viewModel.getPercentage(totalSaving,totalTarget)
+////            }else{
+////                totalTarget = it.toDouble()
+////                binding.tvTotalTarget.text = context?.getString(R.string.total_target,it.toString())
+////                viewModel.getPercentage(totalSaving,totalTarget)
+////            }
+////
+////        })
+////        viewModel.percentage.observe(viewLifecycleOwner,{
+////            binding.tvPercentage.text = context?.getString(R.string.percentage,it)
+////        })
+////        viewModel.goldCurrency.observe(viewLifecycleOwner,{
+////            if(it == null){
+////                binding.tvPricePergram.text = ""
+////                binding.tvPricePrevious.text = ""
+////                binding.tvPriceDifference.text = ""
+////                binding.tvIdr.text = ""
+////                binding.tvGoldTime.setText(getTime())
+////                binding.tvKursTime.setText(getTime())
+////            }else{
+////                binding.tvPricePergram.text = context?.getString(R.string.price_pergram,it.priceGram24k)
+////                binding.tvPricePrevious.text = context?.getString(R.string.price_previous,it.prevPrice)
+////                binding.tvPriceDifference.text = context?.getString(R.string.price_double,it.priceDifferent)
+////                binding.tvIdr.text = context?.getString(R.string.price_double,it.currency)
+////                binding.tvGoldTime.setText(it.dateGold)
+////                binding.tvKursTime.setText(it.dateCurrency)
+////                if(it.priceDifferent <0){
+////                    binding.tvPriceDifference.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_down, 0, 0, 0)
+////                    binding.tvPriceDifference.getCompoundDrawables()[0].setTint(requireContext().getColor(R.color.red_500))
+////                }else{
+////                    binding.tvPriceDifference.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_up, 0, 0, 0)
+////                    binding.tvPriceDifference.getCompoundDrawables()[0].setTint(requireContext().getColor(R.color.green_500))
+////                }
+////            }
+////
+////        })
+//
+//
+////        transactionViewModel.savingnikah.observe(viewLifecycleOwner,{
+////            binding.tvTotal.text = it.toString()
+////        })
+//
+////    }
+//
+////    private fun getTime(): String? {
+////        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+////            val timeNow = LocalDateTime.now()
+////            val formatter = DateTimeFormatter.ofPattern("dd MMM yyyy")
+////            val time = timeNow.format(formatter).toString()
+////
+////            return time
+////
+////        } else {
+////            return null
+////        }
+////    }
+//
+//    private fun percentage() {
+//        try {
+//            percentage = totalSaving.div(totalTarget).times(100)
+//        } catch (e: Exception) {
+//            percentage = 0.0
+//        }
+//
+//    }
+//
+//
+////    override fun onDestroyView() {
+////        super.onDestroyView()
+////        _binding = null
+////    }
+//
+//
+//}
 
-    private fun percentage() {
-        try {
-            percentage = totalSaving.div(totalTarget).times(100)
-        } catch (e: Exception) {
-            percentage = 0.0
-        }
+
+
+
+
+
+@Composable
+fun HomeScreen(
+    navigateToAddTransaction:()-> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: GoldViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val target by viewModel.allTargetState.collectAsState(initial = 0)
+    val saving by viewModel.allSavingState.collectAsState(initial = 0)
+    val time =getTime().toString()
+    viewModel.getPercentage(saving?.toDouble(),target?.toDouble())
+    val percentage by viewModel.percentState.collectAsState()
+    val listHeader = listOf(target.toString(),saving.toString(),time,percentage)
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = navigateToAddTransaction,
+                modifier = modifier.navigationBarsPadding(),
+                backgroundColor = colorResource(id = R.color.blue_500)
+            ){
+            Icon(painter = painterResource(id = R.drawable.ic_add), contentDescription = "" ,
+                tint = Color.White)
+        } }) { innerPadding ->
+        HomeBody(modifier = modifier.padding(innerPadding), listHeader = listHeader)
 
     }
 
 
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
 
+}
 
+@Composable
+fun HomeBody(modifier: Modifier,
+listHeader: List<String>) {
+    Column(modifier.background(color = colorResource(id = R.color.grey_100))) {
+        Header(
+            modifier = modifier,
+            list = listHeader
+        )
+        Text(
+            modifier = modifier.padding(top = 24.dp, start = 16.dp),
+            text = stringResource(id = R.string.referensi_hari_ini),
+            style = MaterialTheme.typography.h6,
+            color = Color.Gray
+        )
+        GoldCard()
+        CurrencyCard()
+    }
 }
 
 @Composable
@@ -175,7 +235,7 @@ fun Header(modifier: Modifier,
             modifier = modifier
                 .fillMaxWidth()
                 .height(180.dp)
-                .background(color = MaterialTheme.colors.primary)
+                .background(color = colorResource(id = R.color.yellow_200))
                 .padding(all = 16.dp),
             verticalArrangement = Arrangement.Top
         ) {
@@ -199,10 +259,9 @@ fun Header(modifier: Modifier,
                 .clip(RoundedCornerShape(6.dp))
                 .background(color = Color.White)
                 .padding(16.dp)
-//                .wrapContentSize(Alignment.Center)
-
         ) {
-            Row() {
+            Row(modifier = modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically) {
                 Column(
                     modifier = modifier
                         .fillMaxWidth()
@@ -211,7 +270,7 @@ fun Header(modifier: Modifier,
                     Text(
                         text = stringResource(id = R.string.summary),
                         style = MaterialTheme.typography.h5,
-                        color = Color.Gray
+                        color = colorResource(id = R.color.grey_700)
                     )
                     Text(
                         modifier = modifier.padding(top = 8.dp),
@@ -232,34 +291,29 @@ fun Header(modifier: Modifier,
                         color = Color.Black
                     )
                 }
-                Text(modifier = modifier.fillMaxWidth(0.4f),
-                    text = list[3],
-                    color = Color.Gray)
+                Box(modifier = modifier.weight(0.4f)) {
+                    Text(modifier = modifier,
+                        text = list[3],
+                        style = MaterialTheme.typography.h5,
+                        color = Color.Black)
+                }
+
             }
         }
     }
 
 }
-
 @Composable
 fun GoldCard() {
     Box(
         Modifier
             .fillMaxWidth()
-
-            .padding(
-                top = 16.dp, start = 16.dp, end = 16.dp
-            )
+            .padding(top = 16.dp, start = 16.dp, end = 16.dp)
             .shadow(6.dp)
             .clip(RoundedCornerShape(6.dp))
             .background(color = Color.White)
             .padding(16.dp)
-
-//                .wrapContentSize(Alignment.Center)
-
     ) {
-
-
         Row(modifier = Modifier) {
             Image(
                 modifier = Modifier.size(60.dp),
@@ -273,7 +327,7 @@ fun GoldCard() {
                 Text(
                     text = stringResource(id = R.string.emas),
                     style = MaterialTheme.typography.h5,
-                    color = MaterialTheme.colors.primary
+                    color = colorResource(id = R.color.yellow_700)
                 )
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
@@ -322,7 +376,8 @@ fun CurrencyCard() {
         Row(modifier = Modifier) {
             Image(
                 modifier = Modifier.size(60.dp),
-                painter = painterResource(id = R.drawable.ic_about), contentDescription = ""
+                painter = painterResource(id = R.drawable.ic_about),
+                contentDescription = ""
             )
             Column(
                 modifier = Modifier
@@ -332,7 +387,7 @@ fun CurrencyCard() {
                 Text(
                     text = stringResource(id = R.string.forex),
                     style = MaterialTheme.typography.h5,
-                    color = Color.Blue
+                    color = colorResource(id = R.color.blue_700)
                 )
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
@@ -358,39 +413,12 @@ fun CurrencyCard() {
     }
 }
 
-
-@Composable
-fun HomeScreen(
-    modifier: Modifier = Modifier,
-    viewModel: GoldViewModel = viewModel(factory = AppViewModelProvider.Factory)
-) {
-    val target by viewModel.allTargetState.collectAsState(initial = 0)
-    val saving by viewModel.allSavingState.collectAsState(initial = 0)
-    val time =getTime().toString()
-    viewModel.getPercentage(saving?.toDouble(),target?.toDouble())
-    val percentage by viewModel.percentState.collectAsState()
-    val listHeader = listOf(target.toString(),saving.toString(),time,percentage)
-
-    Column(modifier.background(color = Color(0xFFF4F9FB))) {
-        Header(modifier = modifier, list = listHeader)
-        Text(
-            modifier = modifier.padding(top = 24.dp, start = 16.dp),
-            text = stringResource(id = R.string.referensi_hari_ini),
-            style = MaterialTheme.typography.h6,
-            color = Color.Gray
-        )
-        GoldCard()
-        CurrencyCard()
-    }
-
-}
-
 @Preview(showBackground = true)
 @Composable
 fun HomePreview() {
     MyApplicationTheme(darkTheme = false) {
         Column() {
-            Header(modifier = Modifier,listOf("90000", "80000","19 januari 2023","40"))
+            Header(modifier = Modifier,listOf("90000", "80000","19 januari 2023","40 %"))
             Text(
                 modifier = Modifier.padding(top = 24.dp, start = 16.dp),
                 text = stringResource(id = R.string.referensi_hari_ini),

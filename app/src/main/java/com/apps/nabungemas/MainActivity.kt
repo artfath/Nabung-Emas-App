@@ -19,63 +19,36 @@ import com.apps.nabungemas.databinding.ActivityMainBinding
 import kotlin.text.Typography.dagger
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : ComponentActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding.root)
+        setContent {
+            MainScreen()
+        }
+//        binding = ActivityMainBinding.inflate(layoutInflater)
+//        setContentView(binding.root)
 //        val navHostFragment=supportFragmentManager
 //            .findFragmentById(R.id.fragment_container_view) as NavHostFragment
 //        val navigationTitle=navHostFragment.navController
 //        setupActionBarWithNavController(navigationTitle)
 
 
-        navController = findNavController(R.id.fragment_container_view)
-        binding.bottomNavigation.setupWithNavController(navController)
-
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.addTransactionFragment ->
-                    binding.bottomNavigation.visibility = View.GONE
-                else ->
-                    binding.bottomNavigation.visibility = View.VISIBLE
-            }
-        }
+//        navController = findNavController(R.id.fragment_container_view)
+//        binding.bottomNavigation.setupWithNavController(navController)
+//
+//        navController.addOnDestinationChangedListener { _, destination, _ ->
+//            when (destination.id) {
+//                R.id.addTransactionFragment ->
+//                    binding.bottomNavigation.visibility = View.GONE
+//                else ->
+//                    binding.bottomNavigation.visibility = View.VISIBLE
+//            }
+//        }
     }
 
 
 }
 
-//class MainActivity : ComponentActivity() {
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContent {
-//            MyApplicationTheme {
-//                // A surface container using the 'background' color from the theme
-//                Surface(
-//                    modifier = Modifier.fillMaxSize(),
-//                    color = MaterialTheme.colors.background
-//                ) {
-//                    Greeting("Android")
-//                }
-//            }
-//        }
-//    }
-//}
-//
-//@Composable
-//fun Greeting(name: String) {
-//    Text(text = "Hello $name!")
-//}
-//
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//    MyApplicationTheme {
-//        Greeting("Android")
-//    }
-//}

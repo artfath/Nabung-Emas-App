@@ -34,73 +34,78 @@ import com.apps.nabungemas.R
 import com.apps.nabungemas.data.TransactionTable
 import com.apps.nabungemas.databinding.FragmentTransactionBinding
 import com.apps.nabungemas.ui.adapter.TransactionListAdapter
+import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import com.apps.nabungemas.viewmodel.TransactionViewModel
 import com.apps.nabungemas.viewmodel.TransactionViewModelFactory
 
+object TransactionNavigation:NavigationDestination{
+    override val route: String = "transaction"
+    override val title: Int = R.string.transaction
 
-class TransactionFragment : Fragment() {
-//    private val viewModel: TransactionViewModel by activityViewModels {
-//        TransactionViewModelFactory(
-//            (activity?.application as DataApplication).database.transactionDao()
-//        )
-//    }
-//    private var _binding: FragmentTransactionBinding? = null
-//    private val binding get() = _binding!!
-
-
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-//        _binding = FragmentTransactionBinding.inflate(inflater,container,false)
-//        val view = binding.root
-//        return view
-        return ComposeView(requireContext()).apply {
-            setContent {
-                MyApplicationTheme(darkTheme = false) {
-                    TransactionScreen()
-                }
-            }
-        }
-    }
-
-//    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-//        super.onViewCreated(view, savedInstanceState)
-//        val adapter = TransactionListAdapter()
+}
+//class TransactionFragment : Fragment() {
+////    private val viewModel: TransactionViewModel by activityViewModels {
+////        TransactionViewModelFactory(
+////            (activity?.application as DataApplication).database.transactionDao()
+////        )
+////    }
+////    private var _binding: FragmentTransactionBinding? = null
+////    private val binding get() = _binding!!
 //
 //
-//        viewModel.allTransaction.observe(viewLifecycleOwner, {
-//            adapter.submitList(it)
-//        })
-//        binding.apply {
-//            rvTransaction.setHasFixedSize(true)
-//            rvTransaction.adapter = adapter
-//        }
-//        topMenu()
-//
-//    }
-//
-//    private fun topMenu() {
-//        binding.toolbar.setOnMenuItemClickListener {
-//            when (it.itemId) {
-//                R.id.add -> {
-//                    findNavController().navigate(R.id.action_transactionFragment_to_addTransactionFragment)
-//                    true
+//    override fun onCreateView(
+//        inflater: LayoutInflater, container: ViewGroup?,
+//        savedInstanceState: Bundle?
+//    ): View? {
+//        // Inflate the layout for this fragment
+////        _binding = FragmentTransactionBinding.inflate(inflater,container,false)
+////        val view = binding.root
+////        return view
+//        return ComposeView(requireContext()).apply {
+//            setContent {
+//                MyApplicationTheme(darkTheme = false) {
+//                    TransactionScreen()
 //                }
-//                else -> false
 //            }
 //        }
 //    }
 //
-//    override fun onDestroyView() {
-//        super.onDestroyView()
-//        _binding = null
-//    }
-
-
-}
+////    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+////        super.onViewCreated(view, savedInstanceState)
+////        val adapter = TransactionListAdapter()
+////
+////
+////        viewModel.allTransaction.observe(viewLifecycleOwner, {
+////            adapter.submitList(it)
+////        })
+////        binding.apply {
+////            rvTransaction.setHasFixedSize(true)
+////            rvTransaction.adapter = adapter
+////        }
+////        topMenu()
+////
+////    }
+////
+////    private fun topMenu() {
+////        binding.toolbar.setOnMenuItemClickListener {
+////            when (it.itemId) {
+////                R.id.add -> {
+////                    findNavController().navigate(R.id.action_transactionFragment_to_addTransactionFragment)
+////                    true
+////                }
+////                else -> false
+////            }
+////        }
+////    }
+////
+////    override fun onDestroyView() {
+////        super.onDestroyView()
+////        _binding = null
+////    }
+//
+//
+//}
 
 @Composable
 fun TransactionBody(
@@ -190,13 +195,13 @@ fun TransactionItemPreview(){
     TransactionItem(modifier = Modifier, transaction = TransactionTable(0,"20 januari 2023","tabungan menikah",20000,1.0,"antam"))
 }
 @Composable
-fun TransactionScreen() {
+fun TransactionScreen(navigateToAddTransaction:()->Unit) {
     Scaffold(
         topBar = {
             MainTopAppBar(
                 title = "Transaction",
                 version = 1,
-                navigateUp = {})
+                navigateAdd = navigateToAddTransaction)
         },
         backgroundColor = Color(0xFFF4F9FB)
     )
@@ -213,6 +218,6 @@ fun TransactionScreen() {
 @Composable
 fun TransactionPreview() {
     MyApplicationTheme(darkTheme = false) {
-        TransactionScreen()
+        TransactionScreen(navigateToAddTransaction = {})
     }
 }

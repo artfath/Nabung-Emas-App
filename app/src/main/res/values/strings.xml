@@ -34,10 +34,12 @@
     <string name="summary">Ringkasan</string>
     <string name="target_tabungan">Target *</string>
     <string name="add_saving">Add Saving</string>
+    <string name="add_transaction">Add Transaction</string>
     <string name="delete">Delete</string>
     <string name="selamat_menabung_emas">Selamat Menabung Emas</string>
     <string name="referensi_hari_ini">Referensi hari Ini</string>
     <string name="grams">gram</string>
+    <string name="graph">Graph</string>
     <string-array name="category_saving">
         <item>Tabungan Menikah</item>
         <item>Tabungan Rumah</item>

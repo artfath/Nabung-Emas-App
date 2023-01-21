@@ -8,7 +8,7 @@
         android:title="@string/transaction"/>
     <item android:id="@+id/graphFragment"
         android:icon="@drawable/ic_chart"
-        android:title="Graph"/>
+        android:title="@string/graph"/>
     <item android:id="@+id/savingFragment"
         android:icon="@drawable/ic_wallet"
         android:title="@string/saving"/>
