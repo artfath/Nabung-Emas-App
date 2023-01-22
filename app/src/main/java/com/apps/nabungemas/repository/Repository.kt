@@ -1,7 +1,7 @@
 package com.apps.nabungemas.repository
 
 
-import com.apps.nabungemas.data.GoldCurrenncyTable
+import com.apps.nabungemas.data.GoldCurrencyTable
 import com.apps.nabungemas.data.TransactionDao
 import com.apps.nabungemas.network.GoldApi
 
@@ -11,5 +11,5 @@ class Repository(private val goldApi: GoldApi, private val transactionDao: Trans
 
     suspend fun getPrice(code: String?,token: String?) = goldApi.retrofitService.getPrice(code,token)
 
-    suspend fun insertGoldCurrency(item: GoldCurrenncyTable) = transactionDao.insertGoldCurrency(item)
+    suspend fun insertGoldCurrency(item: GoldCurrencyTable) = transactionDao.insertGoldCurrency(item)
 }

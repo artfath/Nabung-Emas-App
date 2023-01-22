@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = [TransactionTable::class, SavingTable::class, GoldCurrenncyTable::class],
+    entities = [TransactionTable::class, SavingTable::class, GoldCurrencyTable::class],
     version = 1,
     exportSchema = false
 )

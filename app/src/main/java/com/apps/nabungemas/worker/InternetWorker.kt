@@ -3,21 +3,16 @@ package com.apps.nabungemas.worker
 import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
-import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.apps.nabungemas.DataApplication
-import com.apps.nabungemas.data.GoldCurrenncyTable
-import com.apps.nabungemas.data.TransactionRoomDatabase
-import com.apps.nabungemas.network.CurrencyApi
+import com.apps.nabungemas.data.GoldCurrencyTable
 import com.apps.nabungemas.network.GoldApi
-import com.apps.nabungemas.repository.Repository
 import com.apps.nabungemas.worker.WorkerConstant.TROY_OUNCE_GRAM
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
 import java.util.*
-import com.apps.nabungemas.data.TransactionDao as TransactionDao1
 
 class InternetWorker(context: Context,params:WorkerParameters):CoroutineWorker(context,params) {
     override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
@@ -40,7 +35,7 @@ class InternetWorker(context: Context,params:WorkerParameters):CoroutineWorker(c
                     val dateGold= getdate(it.time)
                     val dateCurrency = getdate(apiTwo.await().time)
 
-                    val goldCurrency = GoldCurrenncyTable(
+                    val goldCurrency = GoldCurrencyTable(
                         currency = currency,
                         prevPrice = prevPrice,
                         priceGram24k = priceGram,

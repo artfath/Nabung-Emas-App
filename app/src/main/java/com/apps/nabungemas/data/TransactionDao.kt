@@ -46,11 +46,11 @@ interface TransactionDao {
     fun getPercentage():Flow<Double?>
 
     @Query("SELECT * FROM `gold_currency`")
-    suspend fun findGoldCurrency():GoldCurrenncyTable?
+    suspend fun findGoldCurrency():GoldCurrencyTable?
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertGoldCurrency(item:GoldCurrenncyTable)
+    suspend fun insertGoldCurrency(item:GoldCurrencyTable)
 
     @Query("SELECT * FROM `gold_currency` ORDER BY id DESC")
-    fun getGoldCurrency():Flow<GoldCurrenncyTable>
+    fun getGoldCurrency():Flow<GoldCurrencyTable>
 }

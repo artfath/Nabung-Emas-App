@@ -1,6 +1,6 @@
 package com.apps.nabungemas.repository
 
-import com.apps.nabungemas.data.GoldCurrenncyTable
+import com.apps.nabungemas.data.GoldCurrencyTable
 import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.data.TransactionTable
 import kotlinx.coroutines.flow.Flow
@@ -32,9 +32,9 @@ interface TransactionsRepository {
 
     fun getPercentage(): Flow<Double?>
 
-    suspend fun findGoldCurrency(): GoldCurrenncyTable?
+    suspend fun findGoldCurrency(): GoldCurrencyTable?
 
-    suspend fun insertGoldCurrency(item: GoldCurrenncyTable)
+    suspend fun insertGoldCurrency(item: GoldCurrencyTable)
 
-    fun getGoldCurrency(): Flow<GoldCurrenncyTable>
+    fun getGoldCurrency(): Flow<GoldCurrencyTable>
 }

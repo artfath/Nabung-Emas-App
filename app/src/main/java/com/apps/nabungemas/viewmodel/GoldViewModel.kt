@@ -4,7 +4,7 @@ import android.app.Application
 import android.util.Log
 import androidx.lifecycle.*
 import androidx.work.*
-import com.apps.nabungemas.data.GoldCurrenncyTable
+import com.apps.nabungemas.data.GoldCurrencyTable
 import com.apps.nabungemas.model.Currencies
 import com.apps.nabungemas.model.GoldPrice
 import com.apps.nabungemas.network.ApiStatus
@@ -44,13 +44,14 @@ class GoldViewModel(
         repository.getTotalSaving().asLiveData()
     val allTotalTarget: LiveData<Long?> =
         repository.getTotalTarget().asLiveData()
-    val goldCurrency: LiveData<GoldCurrenncyTable?> =
+    val goldCurrency: LiveData<GoldCurrencyTable?> =
         repository.getGoldCurrency().asLiveData()
 
     val allTargetState: Flow<Long?> = repository.getTotalTarget()
     val allSavingState: Flow<Long?> = repository.getTotalSaving()
     private val _percentState = MutableStateFlow("")
     val percentState: StateFlow<String> = _percentState.asStateFlow()
+    val goldCurrencyState: Flow<GoldCurrencyTable?> = repository.getGoldCurrency()
 
     init {
         getGoldandCurrency()
@@ -75,7 +76,7 @@ class GoldViewModel(
         }
 
     }
-    private fun insertGoldCurrency(item:GoldCurrenncyTable){
+    private fun insertGoldCurrency(item:GoldCurrencyTable){
         viewModelScope.launch {
             repository.insertGoldCurrency(item)
         }

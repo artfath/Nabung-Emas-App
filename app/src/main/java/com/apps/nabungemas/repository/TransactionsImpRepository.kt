@@ -1,9 +1,6 @@
 package com.apps.nabungemas.repository
 
-import com.apps.nabungemas.data.GoldCurrenncyTable
-import com.apps.nabungemas.data.SavingTable
-import com.apps.nabungemas.data.TransactionDao
-import com.apps.nabungemas.data.TransactionTable
+import com.apps.nabungemas.data.*
 import kotlinx.coroutines.flow.Flow
 
 class TransactionsImpRepository(private val transactionDao: TransactionDao):TransactionsRepository {
@@ -53,14 +50,14 @@ class TransactionsImpRepository(private val transactionDao: TransactionDao):Tran
     override fun getPercentage(): Flow<Double?> = transactionDao.getPercentage()
 
 
-    override suspend fun findGoldCurrency(): GoldCurrenncyTable?= transactionDao.findGoldCurrency()
+    override suspend fun findGoldCurrency(): GoldCurrencyTable?= transactionDao.findGoldCurrency()
 
 
-    override suspend fun insertGoldCurrency(item: GoldCurrenncyTable) =
+    override suspend fun insertGoldCurrency(item: GoldCurrencyTable) =
         transactionDao.insertGoldCurrency(item)
 
 
-    override fun getGoldCurrency(): Flow<GoldCurrenncyTable> = transactionDao.getGoldCurrency()
+    override fun getGoldCurrency(): Flow<GoldCurrencyTable> = transactionDao.getGoldCurrency()
 
 
 }

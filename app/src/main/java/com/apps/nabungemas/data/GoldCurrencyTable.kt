@@ -5,7 +5,7 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "gold_currency")
-data class GoldCurrenncyTable(
+data class GoldCurrencyTable(
     @PrimaryKey(autoGenerate = true)
     val id:Int=0,
     @ColumnInfo(name = "currency")
