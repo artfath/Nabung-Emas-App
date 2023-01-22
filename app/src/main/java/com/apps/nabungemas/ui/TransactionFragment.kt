@@ -1,10 +1,5 @@
 package com.apps.nabungemas.ui
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -15,31 +10,25 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
-import com.apps.nabungemas.DataApplication
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
 import com.apps.nabungemas.data.TransactionTable
-import com.apps.nabungemas.databinding.FragmentTransactionBinding
-import com.apps.nabungemas.ui.adapter.TransactionListAdapter
 import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import com.apps.nabungemas.viewmodel.TransactionViewModel
-import com.apps.nabungemas.viewmodel.TransactionViewModelFactory
 
-object TransactionNavigation:NavigationDestination{
+object TransactionNavigation : NavigationDestination {
     override val route: String = "transaction"
     override val title: Int = R.string.transaction
 
@@ -108,15 +97,39 @@ object TransactionNavigation:NavigationDestination{
 //}
 
 @Composable
+fun TransactionScreen(
+    navigateToAddTransaction: () -> Unit,
+    viewModel: TransactionViewModel = viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val listTransaction by viewModel.allTransactionState.collectAsState(initial = null)
+    Scaffold(
+        topBar = {
+            MainTopAppBar(
+                title = "Transaction",
+                version = 1,
+                navigateAdd = navigateToAddTransaction
+            )
+        },
+        backgroundColor = Color(0xFFF4F9FB)
+    )
+    { innerPadding ->
+        TransactionBody(
+            itemList = listTransaction,
+            modifier = Modifier.padding(innerPadding)
+        )
+    }
+}
+
+@Composable
 fun TransactionBody(
-    itemList: List<TransactionTable>,
+    itemList: List<TransactionTable>?,
     modifier: Modifier
 ) {
     Column() {
-        if (itemList.isEmpty()) {
+        if (itemList.isNullOrEmpty()) {
             Text(text = "No data")
         } else {
-            TransactionList(modifier = modifier,itemList)
+            TransactionList(modifier = modifier, itemList)
         }
     }
 
@@ -124,17 +137,19 @@ fun TransactionBody(
 }
 
 @Composable
-fun TransactionList(modifier: Modifier,itemList: List<TransactionTable>) {
+fun TransactionList(modifier: Modifier, itemList: List<TransactionTable>) {
     LazyColumn() {
         items(items = itemList) {
-            TransactionItem(modifier = modifier,it)
+            TransactionItem(modifier = modifier, it)
         }
     }
 }
 
 @Composable
-fun TransactionItem(modifier: Modifier,
-                    transaction: TransactionTable) {
+fun TransactionItem(
+    modifier: Modifier,
+    transaction: TransactionTable
+) {
     Box(
         Modifier
             .fillMaxWidth()
@@ -189,30 +204,23 @@ fun TransactionItem(modifier: Modifier,
     }
 
 }
+
 @Preview(showBackground = true)
 @Composable
-fun TransactionItemPreview(){
-    TransactionItem(modifier = Modifier, transaction = TransactionTable(0,"20 januari 2023","tabungan menikah",20000,1.0,"antam"))
-}
-@Composable
-fun TransactionScreen(navigateToAddTransaction:()->Unit) {
-    Scaffold(
-        topBar = {
-            MainTopAppBar(
-                title = "Transaction",
-                version = 1,
-                navigateAdd = navigateToAddTransaction)
-        },
-        backgroundColor = Color(0xFFF4F9FB)
-    )
-    { innerPadding ->
-        TransactionBody(
-            itemList = listOf(TransactionTable(0,"20 januari 2023","tabungan menikah",20000,1.0,"antam"),
-                TransactionTable(1,"20 januari 2023","tabungan menikah",20000,1.0,"antam")),
-            modifier = Modifier.padding(innerPadding)
+fun TransactionItemPreview() {
+    TransactionItem(
+        modifier = Modifier,
+        transaction = TransactionTable(
+            0,
+            "20 januari 2023",
+            "tabungan menikah",
+            20000,
+            1.0,
+            "antam"
         )
-    }
+    )
 }
+
 
 @Preview(showBackground = true)
 @Composable

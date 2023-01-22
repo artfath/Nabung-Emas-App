@@ -7,6 +7,7 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.startup.Initializer
 import com.apps.nabungemas.DataApplication
 import com.apps.nabungemas.viewmodel.GoldViewModel
+import com.apps.nabungemas.viewmodel.TransactionViewModel
 
 object AppViewModelProvider {
     val Factory = viewModelFactory {
@@ -15,6 +16,9 @@ object AppViewModelProvider {
                 repository = dataApplication().container.transactionsRepository,
                 dataApplication()
             )
+        }
+        initializer {
+            TransactionViewModel(repository = dataApplication().container.transactionsRepository)
         }
     }
 }

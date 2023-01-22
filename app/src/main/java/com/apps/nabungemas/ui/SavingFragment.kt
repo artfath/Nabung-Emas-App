@@ -1,12 +1,5 @@
 package com.apps.nabungemas.ui
 
-import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,23 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
-import com.apps.nabungemas.DataApplication
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
-import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.data.TransactionTable
-import com.apps.nabungemas.databinding.FragmentSavingBinding
-import com.apps.nabungemas.ui.adapter.SavingListAdapter
 import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
-import com.apps.nabungemas.viewmodel.TransactionViewModel
-import com.apps.nabungemas.viewmodel.TransactionViewModelFactory
 
 object SavingDestination: NavigationDestination {
     override val route: String = "saving"

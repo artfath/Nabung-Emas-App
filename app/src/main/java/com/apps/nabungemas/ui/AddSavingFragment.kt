@@ -1,13 +1,5 @@
 package com.apps.nabungemas.ui
 
-import android.content.Context
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -17,23 +9,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.activityViewModels
-import androidx.navigation.fragment.findNavController
-import com.apps.nabungemas.DataApplication
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
 import com.apps.nabungemas.data.TransactionTable
-import com.apps.nabungemas.databinding.FragmentAddSavingBinding
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
-import com.apps.nabungemas.viewmodel.TransactionViewModel
-import com.apps.nabungemas.viewmodel.TransactionViewModelFactory
 
 
 //class AddSavingFragment : Fragment() {

@@ -5,24 +5,28 @@ import androidx.lifecycle.*
 import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.data.TransactionDao
 import com.apps.nabungemas.data.TransactionTable
+import com.apps.nabungemas.repository.TransactionsRepository
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
 
-class TransactionViewModel(private val transtionDao: TransactionDao) : ViewModel() {
+class TransactionViewModel(private val repository: TransactionsRepository) : ViewModel() {
 
     val allTransaction: LiveData<List<TransactionTable>> =
-        transtionDao.getTransactions().asLiveData()
+        repository.getTransactions().asLiveData()
 
     //    val savingnikah:LiveData<Long> = transtionDao.getSaving("nikah")
-    val allSaving: LiveData<List<SavingTable>> = transtionDao.getAllSaving().asLiveData()
+    val allSaving: LiveData<List<SavingTable>> = repository.getAllSaving().asLiveData()
     private var _saving = MutableLiveData<Long>()
 //    val data = transtionDao.findCategorySaving("Tabungan Menikah").asLiveData()
 
     private var _category = MutableLiveData<Boolean>()
     val category: LiveData<Boolean> = _category
 
+    val allTransactionState: Flow<List<TransactionTable>> = repository.getTransactions()
+
     private fun insertTransaction(transaction: TransactionTable) {
         viewModelScope.launch {
-            transtionDao.insertData(transaction)
+            repository.insertData(transaction)
         }
     }
 
@@ -32,7 +36,7 @@ class TransactionViewModel(private val transtionDao: TransactionDao) : ViewModel
 
     private fun insertSaving(saving: SavingTable) {
         viewModelScope.launch {
-            transtionDao.insertSaving(saving)
+            repository.insertSaving(saving)
         }
     }
 
@@ -57,7 +61,7 @@ class TransactionViewModel(private val transtionDao: TransactionDao) : ViewModel
 
     private fun updateSaving(saving: SavingTable) {
         viewModelScope.launch {
-            transtionDao.updateSaving(saving)
+            repository.updateSaving(saving)
         }
     }
 
@@ -89,7 +93,7 @@ class TransactionViewModel(private val transtionDao: TransactionDao) : ViewModel
         insertTransaction(newTransaction)
         viewModelScope.launch {
             try {
-                val dataCategory = transtionDao.findCategorySaving(catagory)
+                val dataCategory = repository.findCategorySaving(catagory)
                 if (dataCategory != null) {
                     addNewSaving(catagory, dataCategory.target.toString())
                 }
@@ -156,15 +160,15 @@ class TransactionViewModel(private val transtionDao: TransactionDao) : ViewModel
         var dataCategory: SavingTable?
         viewModelScope.launch {
             try {
-                dataCategory = transtionDao.findCategorySaving(catagory)
+                dataCategory = repository.findCategorySaving(catagory)
                 Log.d("date category", dataCategory.toString())
 
                 if (dataCategory != null) {
-                    val find = transtionDao.findSaving(catagory)
+                    val find = repository.findSaving(catagory)
                     Log.d("find saving", find.toString())
 
                     if (find != null) {
-                        totalSaving = transtionDao.getSaving(catagory)
+                        totalSaving = repository.getSaving(catagory)
                         Log.d("transaction", totalSaving!!.toString())
 
                         if (totalSaving != null) {
