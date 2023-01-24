@@ -33,7 +33,7 @@
     <string name="price_double">Rp. %1$.2f</string>
     <string name="summary">Ringkasan</string>
     <string name="target_tabungan">Target *</string>
-    <string name="add_saving">Add Saving</string>
+    <string name="add_saving">Add Target Saving</string>
     <string name="add_transaction">Add Transaction</string>
     <string name="delete">Delete</string>
     <string name="selamat_menabung_emas">Selamat Menabung Emas</string>

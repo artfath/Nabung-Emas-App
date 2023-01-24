@@ -9,18 +9,24 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
+import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.data.TransactionTable
 import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
+import com.apps.nabungemas.viewmodel.TransactionViewModel
 
 object SavingDestination: NavigationDestination {
     override val route: String = "saving"
@@ -101,7 +107,10 @@ object SavingDestination: NavigationDestination {
 //
 //}
 @Composable
-fun SavingScreen(navigateToAddSaving:()->Unit) {
+fun SavingScreen(navigateToAddSaving:()->Unit,
+viewModel: TransactionViewModel=viewModel(factory = AppViewModelProvider.Factory)
+) {
+    val listSaving by viewModel.allSavingState.collectAsState(initial = null)
     Scaffold(
         topBar = {
             MainTopAppBar(
@@ -113,10 +122,7 @@ fun SavingScreen(navigateToAddSaving:()->Unit) {
     )
     { innerPadding ->
         SavingBody(
-            itemList = listOf(
-                TransactionTable(0,"20 januari 2023","tabungan menikah",20000,1.0,"antam"),
-                TransactionTable(1,"20 januari 2023","tabungan menikah",20000,1.0,"antam")
-            ),
+            itemList = listSaving,
             modifier = Modifier.padding(innerPadding)
         )
     }
@@ -124,11 +130,11 @@ fun SavingScreen(navigateToAddSaving:()->Unit) {
 
 @Composable
 fun SavingBody(
-    itemList: List<TransactionTable>,
+    itemList: List<SavingTable>?,
     modifier: Modifier
 ) {
     Column() {
-        if (itemList.isEmpty()) {
+        if (itemList.isNullOrEmpty()) {
             Text(text = "No data")
         } else {
             SavingList(modifier = modifier,itemList)
@@ -139,7 +145,8 @@ fun SavingBody(
 }
 
 @Composable
-fun SavingList(modifier: Modifier, itemList: List<TransactionTable>) {
+fun SavingList(modifier: Modifier,
+               itemList: List<SavingTable>) {
     LazyColumn() {
         items(items = itemList) {
             SavingItem(modifier = modifier,it)
@@ -149,7 +156,7 @@ fun SavingList(modifier: Modifier, itemList: List<TransactionTable>) {
 
 @Composable
 fun SavingItem(modifier: Modifier,
-               transaction: TransactionTable
+               saving: SavingTable
 ) {
     Box(
         Modifier
@@ -167,7 +174,7 @@ fun SavingItem(modifier: Modifier,
                     .fillMaxWidth()
                     .background(color = Color(0xFFFFFDF5))) {
                     Text(modifier = modifier.padding(8.dp),
-                        text = "Tabungan",
+                        text = saving.savingCategory ?: "",
                         style = MaterialTheme.typography.h6)
                 }
 
@@ -178,12 +185,13 @@ fun SavingItem(modifier: Modifier,
                     Column(modifier = modifier.weight(1f)) {
                         Text(
                             modifier = modifier,
-                            text = "Target Rp 2000000",
+                            text = stringResource(id = R.string.target,saving.target.toString()),
                             style = MaterialTheme.typography.body1
                         )
                         Text(
                             modifier = modifier,
-                            text = "tabungan Rp 200000",
+                            text = stringResource(id = R.string.total_saving,
+                                saving.totalSaving.toString()),
                             style = MaterialTheme.typography.body1
                         )
                     }
@@ -191,7 +199,8 @@ fun SavingItem(modifier: Modifier,
 
                     Text(
                         modifier = modifier.padding(start = 4.dp),
-                        text = "90%",
+                        text = stringResource(id = R.string.percentage,
+                            saving.percentage ?: 0.0),
                         style = MaterialTheme.typography.h6
                     )
                 }
@@ -218,7 +227,8 @@ fun SavingItem(modifier: Modifier,
 @Preview(showBackground = true)
 @Composable
 fun SavingItemPreview(){
-    SavingItem(modifier = Modifier, transaction = TransactionTable(0,"20 januari 2023","tabungan menikah",20000,1.0,"antam"))
+    SavingItem(modifier = Modifier,
+        saving = SavingTable(savingCategory = "Tabungan Menikah", target = 9000000, totalSaving = 900000, percentage = 9.0))
 }
 
 
@@ -226,6 +236,21 @@ fun SavingItemPreview(){
 @Composable
 fun SavingPreview() {
     MyApplicationTheme(darkTheme = false) {
-        SavingScreen(navigateToAddSaving = {})
+        Scaffold(
+            topBar = {
+                MainTopAppBar(
+                    title = "Saving",
+                    version = 1,
+                    navigateAdd = {})
+            },
+            backgroundColor = Color(0xFFF4F9FB)
+        )
+        { innerPadding ->
+            SavingBody(
+                itemList = listOf(SavingTable(savingCategory = "Tabungan Menikah", target = 9000000, totalSaving = 900000, percentage = 9.0),
+                    SavingTable(savingCategory = "Tabungan Rumah", target = 9000000, totalSaving = 900000, percentage = 11.0)),
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     }
 }

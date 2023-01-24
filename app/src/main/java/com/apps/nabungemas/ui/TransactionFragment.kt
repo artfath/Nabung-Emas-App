@@ -226,6 +226,22 @@ fun TransactionItemPreview() {
 @Composable
 fun TransactionPreview() {
     MyApplicationTheme(darkTheme = false) {
-        TransactionScreen(navigateToAddTransaction = {})
+        Scaffold(
+            topBar = {
+                MainTopAppBar(
+                    title = "Transaction",
+                    version = 1,
+                    navigateAdd = {}
+                )
+            },
+            backgroundColor = Color(0xFFF4F9FB)
+        )
+        { innerPadding ->
+            TransactionBody(
+                itemList = listOf(TransactionTable(savingCategory = "Tabungan Menikah"),
+                    TransactionTable(savingCategory = "Tabungan Rumah")),
+                modifier = Modifier.padding(innerPadding)
+            )
+        }
     }
 }

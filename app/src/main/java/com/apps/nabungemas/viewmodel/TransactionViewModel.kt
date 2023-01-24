@@ -29,6 +29,7 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
     val category: LiveData<Boolean> = _category
 
     val allTransactionState: Flow<List<TransactionTable>> = repository.getTransactions()
+    val allSavingState: Flow<List<SavingTable>> = repository.getAllSaving()
 
     var transactionUiState by mutableStateOf(TransactionUiState())
         private set

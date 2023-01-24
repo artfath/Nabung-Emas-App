@@ -179,7 +179,7 @@ fun AddTransactionScreen(
             onCancelClick = onNavigateUp,
             onSaveClick = {
                 viewModel.addNewTransaction()
-                navigateBack()
+                onNavigateUp()
             }
         )
     }
