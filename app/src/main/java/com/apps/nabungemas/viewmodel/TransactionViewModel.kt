@@ -1,15 +1,11 @@
 package com.apps.nabungemas.viewmodel
 
-import android.content.ClipData
 import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
-import androidx.room.ColumnInfo
-import androidx.room.PrimaryKey
 import com.apps.nabungemas.data.SavingTable
-import com.apps.nabungemas.data.TransactionDao
 import com.apps.nabungemas.data.TransactionTable
 import com.apps.nabungemas.repository.TransactionsRepository
 import kotlinx.coroutines.flow.Flow
@@ -28,28 +24,18 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
     private var _category = MutableLiveData<Boolean>()
     val category: LiveData<Boolean> = _category
 
+
     val allTransactionState: Flow<List<TransactionTable>> = repository.getTransactions()
     val allSavingState: Flow<List<SavingTable>> = repository.getAllSaving()
 
     var transactionUiState by mutableStateOf(TransactionUiState())
         private set
 
-
-
-    private fun insertTransaction(transaction: TransactionTable) {
-        viewModelScope.launch {
-            repository.insertData(transaction)
-        }
-    }
+    var savingUiState by mutableStateOf(SavingUiState())
+        private set
 
     fun deleteTransaction() {
         viewModelScope.launch { }
-    }
-
-    private fun insertSaving(saving: SavingTable) {
-        viewModelScope.launch {
-            repository.insertSaving(saving)
-        }
     }
 
 
@@ -71,13 +57,33 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
 //        }
     }
 
-    private fun updateSaving(saving: SavingTable) {
+
+
+    /**
+     * Transaction block
+     */
+
+
+    fun addNewTransaction() {
+//        val newTransaction = getNewTransaction(category, date, price, quantity, product)
+        insertTransaction(transactionUiState.transactionDetails.getNewTransaction())
         viewModelScope.launch {
-            repository.updateSaving(saving)
+            try {
+                val dataCategory = repository.findCategorySaving(transactionUiState.transactionDetails.savingCategory)
+                if (dataCategory != null) {
+                    addNewSavings(transactionUiState.transactionDetails.savingCategory,
+                        dataCategory.target.toString())
+                }
+            } catch (e: Exception) {
+
+            }
         }
     }
-
-
+    private fun insertTransaction(transaction: TransactionTable) {
+        viewModelScope.launch {
+            repository.insertData(transaction)
+        }
+    }
     private fun TransactionTableDetails.getNewTransaction(
     ): TransactionTable {
         return TransactionTable(
@@ -89,37 +95,150 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
         )
     }
 
-    fun addNewTransaction() {
-//        val newTransaction = getNewTransaction(category, date, price, quantity, product)
-        insertTransaction(transactionUiState.transactionDetails.getNewTransaction())
+
+
+    /**
+     * Saving block
+     */
+
+
+//    fun addNewSaving(
+//        category: String = savingUiState.savingDetails.savingCategory,
+//        target: String = savingUiState.savingDetails.target
+//    ) {
+//        var totalSaving: Long
+//        var percentage: Double
+//        var dataCategory: SavingTable?
+//        viewModelScope.launch {
+//            try {
+//                dataCategory = repository.findCategorySaving(category)
+//                Log.d("date category", dataCategory.toString())
+//
+//                if (dataCategory != null) {
+//                    val find = repository.findSaving(category)
+//                    Log.d("find saving", find.toString())
+//
+//                    if (find != null) {
+//                        totalSaving = repository.getSaving(category) ?: 0
+//                        Log.d("transaction", totalSaving.toString())
+//
+//                        if (totalSaving != 0L) {
+//                            percentage =
+//                                (totalSaving.toDouble().div(target.toDouble()).times(100))
+//                            Log.d("percentage", percentage.toString())
+//
+//                            if (dataCategory!!.savingCategory == category) {
+//                                val updatedItem =
+//                                    getUpdatedSaving(
+//                                        dataCategory!!.id,
+//                                        category,
+//                                        target,
+//                                        totalSaving,
+//                                        percentage
+//                                    )
+//                                Log.d("update", updatedItem.toString())
+//                                updateSaving(updatedItem)
+//                                Log.d("update", "update saving")
+//                            } else {
+//                                val newSaving =
+//                                    getNewSaving(category, target, totalSaving, percentage)
+//                                insertSaving(newSaving)
+//                                Log.d("update", "insert saving")
+//                            }
+//                        } else {
+//                            if (dataCategory!!.savingCategory == category) {
+//                                val updatedItem =
+//                                    getUpdatedSaving(
+//                                        dataCategory!!.id,
+//                                        category,
+//                                        target,
+//                                        0,
+//                                        0.0
+//                                    )
+//                                Log.d("update", updatedItem.toString())
+//                                updateSaving(updatedItem)
+//                                Log.d("update", "update saving")
+//                            } else {
+//                                val newSaving =
+//                                    getNewSaving(category, target, 0, 0.0)
+//                                insertSaving(newSaving)
+//                                Log.d("update", "insert saving")
+//                            }
+//                        }
+//
+//                    } else {
+//                        if (dataCategory!!.savingCategory == category) {
+//                            val updatedItem =
+//                                getUpdatedSaving(
+//                                    dataCategory!!.id,
+//                                    category,
+//                                    target,
+//                                    0,
+//                                    0.0
+//                                )
+//                            Log.d("update", updatedItem.toString())
+//                            updateSaving(updatedItem)
+//                            Log.d("update", "update saving")
+//                        } else {
+//                            val newSaving =
+//                                getNewSaving(category, target, 0, 0.0)
+//                            insertSaving(newSaving)
+//                            Log.d("update", "insert saving")
+//                        }
+//                    }
+//
+//                } else {
+//                    totalSaving = repository.getSaving(category) ?: 0
+//                    percentage =
+//                        (totalSaving.toDouble().div(target.toDouble()).times(100))
+//                    val newSaving = getNewSaving(category, target, totalSaving, 0.0)
+//                    insertSaving(newSaving)
+//                    Log.d("nocategory", "no category")
+//                }
+////                totalSaving = saving.value!!
+//
+//            } catch (e: Exception) {
+//                dataCategory =
+//                    SavingTable(savingCategory = "", percentage = 0.0, target = 0, totalSaving = 0)
+//                totalSaving = 0
+//
+//            }
+//
+//
+//        }
+//
+//
+//    }
+    fun addNewSavings(
+        category: String = savingUiState.savingDetails.savingCategory,
+        target: String = savingUiState.savingDetails.target
+    ) {
         viewModelScope.launch {
             try {
-                val dataCategory = repository.findCategorySaving(transactionUiState.transactionDetails.savingCategory)
-                if (dataCategory != null) {
-                    addNewSaving(transactionUiState.transactionDetails.savingCategory,
-                        dataCategory.target.toString())
+                val dataCategory = repository.findCategorySaving(category)
+                val totalSaving = repository.getSaving(category) ?: 0
+                val percentage =
+                    (totalSaving.toDouble().div(target.toDouble()).times(100))
+                if(dataCategory?.savingCategory.isNullOrEmpty() ){
+
+                    val newSaving = getNewSaving(category, target, totalSaving, percentage)
+                    insertSaving(newSaving)
+                }else{
+                    val updatedItem =
+                        getUpdatedSaving(
+                            dataCategory!!.id,
+                            category,
+                            target,
+                            totalSaving,
+                            percentage
+                        )
+                    updateSaving(updatedItem)
                 }
-            } catch (e: Exception) {
+            }catch (e:Exception){
 
             }
-
         }
-
     }
-
-    fun isEntryValid(
-        uiState: TransactionTableDetails =transactionUiState.transactionDetails
-    ): Boolean {
-        return if (uiState.savingCategory.isBlank() || uiState.time.isBlank() ||
-            uiState.goldPrice.isBlank() || uiState.goldQuantity.isBlank() ||
-            uiState.product.isBlank()) {
-            false
-        }else{
-            true
-        }
-
-    }
-
     private fun getNewSaving(
         catagory: String,
         target: String,
@@ -152,124 +271,55 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
         )
     }
 
-
-    fun addNewSaving(
-        category: String,
-        target: String
-    ) {
-        var totalSaving: Long?
-        var percentage: Double
-        var dataCategory: SavingTable?
+    private fun updateSaving(saving: SavingTable) {
         viewModelScope.launch {
-            try {
-                dataCategory = repository.findCategorySaving(category)
-                Log.d("date category", dataCategory.toString())
-
-                if (dataCategory != null) {
-                    val find = repository.findSaving(category)
-                    Log.d("find saving", find.toString())
-
-                    if (find != null) {
-                        totalSaving = repository.getSaving(category)
-                        Log.d("transaction", totalSaving!!.toString())
-
-                        if (totalSaving != null) {
-                            percentage =
-                                (totalSaving!!.toDouble().div(target.toDouble()).times(100))
-                            Log.d("percentage", percentage.toString())
-
-                            if (dataCategory!!.savingCategory == category) {
-                                val updatedItem =
-                                    getUpdatedSaving(
-                                        dataCategory!!.id,
-                                        category,
-                                        target,
-                                        totalSaving!!,
-                                        percentage
-                                    )
-                                Log.d("update", updatedItem.toString())
-                                updateSaving(updatedItem)
-                                Log.d("update", "update saving")
-                            } else {
-                                val newSaving =
-                                    getNewSaving(category, target, totalSaving!!, percentage)
-                                insertSaving(newSaving)
-                                Log.d("update", "insert saving")
-                            }
-                        } else {
-                            if (dataCategory!!.savingCategory == category) {
-                                val updatedItem =
-                                    getUpdatedSaving(
-                                        dataCategory!!.id,
-                                        category,
-                                        target,
-                                        0,
-                                        0.0
-                                    )
-                                Log.d("update", updatedItem.toString())
-                                updateSaving(updatedItem)
-                                Log.d("update", "update saving")
-                            } else {
-                                val newSaving =
-                                    getNewSaving(category, target, 0, 0.0)
-                                insertSaving(newSaving)
-                                Log.d("update", "insert saving")
-                            }
-                        }
-
-                    } else {
-                        if (dataCategory!!.savingCategory == category) {
-                            val updatedItem =
-                                getUpdatedSaving(
-                                    dataCategory!!.id,
-                                    category,
-                                    target,
-                                    0,
-                                    0.0
-                                )
-                            Log.d("update", updatedItem.toString())
-                            updateSaving(updatedItem)
-                            Log.d("update", "update saving")
-                        } else {
-                            val newSaving =
-                                getNewSaving(category, target, 0, 0.0)
-                            insertSaving(newSaving)
-                            Log.d("update", "insert saving")
-                        }
-                    }
-
-                } else {
-                    val newSaving = getNewSaving(category, target, 0, 0.0)
-                    insertSaving(newSaving)
-                    Log.d("nocategory", "no category")
-                }
-//                totalSaving = saving.value!!
-
-            } catch (e: Exception) {
-                dataCategory =
-                    SavingTable(savingCategory = "", percentage = 0.0, target = 0, totalSaving = 0)
-                totalSaving = 0
-//                val newSaving = getNewSaving(catagory, target, 0, 0.0)
-//                insertSaving(newSaving)
-//                Log.d("nocategory", "no category")
-
-            }
-
-
-//        isCategoryExist(catagory)
-
-
+            repository.updateSaving(saving)
         }
-
-
+    }
+    private fun insertSaving(saving: SavingTable) {
+        viewModelScope.launch {
+            repository.insertSaving(saving)
+        }
     }
 
-    fun updateUiState(transactionDetails: TransactionTableDetails) {
+
+
+    fun updateTransactionUiState(transactionDetails: TransactionTableDetails) {
         transactionUiState =
-            TransactionUiState(transactionDetails = transactionDetails, isEntryValid = isEntryValid(transactionDetails))
+            TransactionUiState(transactionDetails = transactionDetails,
+                isEntryValid = isEntryTransactionValid(transactionDetails))
+    }
+
+    fun isEntryTransactionValid(
+        uiState: TransactionTableDetails = transactionUiState.transactionDetails
+    ): Boolean {
+        return if (uiState.savingCategory.isBlank() || uiState.time.isBlank() ||
+            uiState.goldPrice.isBlank() || uiState.goldQuantity.isBlank() ||
+            uiState.product.isBlank()) {
+            false
+        }else{
+            true
+        }
+    }
+    fun updateSavingUiState(savingDetails: SavingDetails){
+        savingUiState = SavingUiState(savingDetails=savingDetails,
+        isEntryValid = isEntrySavingValid(savingDetails))
+    }
+
+    fun isEntrySavingValid(
+        uiState: SavingDetails = savingUiState.savingDetails
+    ): Boolean {
+        return if (uiState.savingCategory.isBlank() || uiState.target.isBlank()) {
+            false
+        }else{
+            true
+        }
     }
 
 }
+
+
+
 
 data class TransactionUiState(
     val transactionDetails: TransactionTableDetails = TransactionTableDetails(),
@@ -283,5 +333,14 @@ data class TransactionTableDetails(
     val goldPrice:String="",
     val goldQuantity:String="",
     val product:String=""
+)
 
+data class SavingUiState(
+    val savingDetails: SavingDetails = SavingDetails(),
+    val isEntryValid: Boolean = false
+)
+
+data class SavingDetails(
+    val savingCategory:String="",
+    val target:String="",
 )
