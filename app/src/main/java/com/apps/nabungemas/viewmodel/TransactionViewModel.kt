@@ -1,7 +1,13 @@
 package com.apps.nabungemas.viewmodel
 
+import android.content.ClipData
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
+import androidx.room.ColumnInfo
+import androidx.room.PrimaryKey
 import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.data.TransactionDao
 import com.apps.nabungemas.data.TransactionTable
@@ -24,13 +30,18 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
 
     val allTransactionState: Flow<List<TransactionTable>> = repository.getTransactions()
 
+    var transactionUiState by mutableStateOf(TransactionUiState())
+        private set
+
+
+
     private fun insertTransaction(transaction: TransactionTable) {
         viewModelScope.launch {
             repository.insertData(transaction)
         }
     }
 
-    fun deleteTransacation() {
+    fun deleteTransaction() {
         viewModelScope.launch { }
     }
 
@@ -66,36 +77,26 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
     }
 
 
-    private fun getNewTransaction(
-        catagory: String,
-        date: String,
-        price: String,
-        quantity: String,
-        product: String
+    private fun TransactionTableDetails.getNewTransaction(
     ): TransactionTable {
         return TransactionTable(
-            savingCategory = catagory,
-            time = date,
-            goldPrice = price.toLong(),
-            goldQuantity = quantity.toDouble(),
+            savingCategory = savingCategory,
+            time = time,
+            goldPrice = goldPrice.toLong(),
+            goldQuantity = goldQuantity.toDouble(),
             product = product
         )
     }
 
-    fun addNewTransaction(
-        catagory: String,
-        date: String,
-        price: String,
-        quantity: String,
-        product: String
-    ) {
-        val newTransaction = getNewTransaction(catagory, date, price, quantity, product)
-        insertTransaction(newTransaction)
+    fun addNewTransaction() {
+//        val newTransaction = getNewTransaction(category, date, price, quantity, product)
+        insertTransaction(transactionUiState.transactionDetails.getNewTransaction())
         viewModelScope.launch {
             try {
-                val dataCategory = repository.findCategorySaving(catagory)
+                val dataCategory = repository.findCategorySaving(transactionUiState.transactionDetails.savingCategory)
                 if (dataCategory != null) {
-                    addNewSaving(catagory, dataCategory.target.toString())
+                    addNewSaving(transactionUiState.transactionDetails.savingCategory,
+                        dataCategory.target.toString())
                 }
             } catch (e: Exception) {
 
@@ -106,16 +107,16 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
     }
 
     fun isEntryValid(
-        catagory: String,
-        date: String,
-        price: String,
-        quantity: String,
-        product: String
+        uiState: TransactionTableDetails =transactionUiState.transactionDetails
     ): Boolean {
-        if (catagory.isBlank() || date.isBlank() || price.isBlank() || quantity.isBlank() || product.isBlank()) {
-            return false
+        return if (uiState.savingCategory.isBlank() || uiState.time.isBlank() ||
+            uiState.goldPrice.isBlank() || uiState.goldQuantity.isBlank() ||
+            uiState.product.isBlank()) {
+            false
+        }else{
+            true
         }
-        return true
+
     }
 
     private fun getNewSaving(
@@ -152,7 +153,7 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
 
 
     fun addNewSaving(
-        catagory: String,
+        category: String,
         target: String
     ) {
         var totalSaving: Long?
@@ -160,15 +161,15 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
         var dataCategory: SavingTable?
         viewModelScope.launch {
             try {
-                dataCategory = repository.findCategorySaving(catagory)
+                dataCategory = repository.findCategorySaving(category)
                 Log.d("date category", dataCategory.toString())
 
                 if (dataCategory != null) {
-                    val find = repository.findSaving(catagory)
+                    val find = repository.findSaving(category)
                     Log.d("find saving", find.toString())
 
                     if (find != null) {
-                        totalSaving = repository.getSaving(catagory)
+                        totalSaving = repository.getSaving(category)
                         Log.d("transaction", totalSaving!!.toString())
 
                         if (totalSaving != null) {
@@ -176,11 +177,11 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
                                 (totalSaving!!.toDouble().div(target.toDouble()).times(100))
                             Log.d("percentage", percentage.toString())
 
-                            if (dataCategory!!.savingCategory == catagory) {
+                            if (dataCategory!!.savingCategory == category) {
                                 val updatedItem =
                                     getUpdatedSaving(
                                         dataCategory!!.id,
-                                        catagory,
+                                        category,
                                         target,
                                         totalSaving!!,
                                         percentage
@@ -190,16 +191,16 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
                                 Log.d("update", "update saving")
                             } else {
                                 val newSaving =
-                                    getNewSaving(catagory, target, totalSaving!!, percentage)
+                                    getNewSaving(category, target, totalSaving!!, percentage)
                                 insertSaving(newSaving)
                                 Log.d("update", "insert saving")
                             }
                         } else {
-                            if (dataCategory!!.savingCategory == catagory) {
+                            if (dataCategory!!.savingCategory == category) {
                                 val updatedItem =
                                     getUpdatedSaving(
                                         dataCategory!!.id,
-                                        catagory,
+                                        category,
                                         target,
                                         0,
                                         0.0
@@ -209,18 +210,18 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
                                 Log.d("update", "update saving")
                             } else {
                                 val newSaving =
-                                    getNewSaving(catagory, target, 0, 0.0)
+                                    getNewSaving(category, target, 0, 0.0)
                                 insertSaving(newSaving)
                                 Log.d("update", "insert saving")
                             }
                         }
 
                     } else {
-                        if (dataCategory!!.savingCategory == catagory) {
+                        if (dataCategory!!.savingCategory == category) {
                             val updatedItem =
                                 getUpdatedSaving(
                                     dataCategory!!.id,
-                                    catagory,
+                                    category,
                                     target,
                                     0,
                                     0.0
@@ -230,14 +231,14 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
                             Log.d("update", "update saving")
                         } else {
                             val newSaving =
-                                getNewSaving(catagory, target, 0, 0.0)
+                                getNewSaving(category, target, 0, 0.0)
                             insertSaving(newSaving)
                             Log.d("update", "insert saving")
                         }
                     }
 
                 } else {
-                    val newSaving = getNewSaving(catagory, target, 0, 0.0)
+                    val newSaving = getNewSaving(category, target, 0, 0.0)
                     insertSaving(newSaving)
                     Log.d("nocategory", "no category")
                 }
@@ -262,4 +263,24 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
 
     }
 
+    fun updateUiState(transactionDetails: TransactionTableDetails) {
+        transactionUiState =
+            TransactionUiState(transactionDetails = transactionDetails, isEntryValid = isEntryValid(transactionDetails))
+    }
+
 }
+
+data class TransactionUiState(
+    val transactionDetails: TransactionTableDetails = TransactionTableDetails(),
+    val isEntryValid: Boolean = false
+)
+
+data class TransactionTableDetails(
+    val id: Int=0,
+    val time:String="",
+    val savingCategory:String="",
+    val goldPrice:String="",
+    val goldQuantity:String="",
+    val product:String=""
+
+)

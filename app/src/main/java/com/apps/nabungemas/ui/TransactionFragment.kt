@@ -170,7 +170,7 @@ fun TransactionItem(
                 contentDescription = ""
             )
             Column(modifier = modifier.padding(6.dp)) {
-                Text(text = "Tabungan", style = MaterialTheme.typography.h6)
+                Text(text = transaction.savingCategory, style = MaterialTheme.typography.h6)
                 Row() {
                     Text(
                         modifier = modifier,
