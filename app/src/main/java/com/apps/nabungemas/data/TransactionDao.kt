@@ -42,7 +42,7 @@ interface TransactionDao {
     @Query("SELECT SUM(target) FROM `saving` ")
     fun getTotalTarget():Flow<Long?>
 
-    @Query("SELECT SUM(total_saving)/SUM(target)*100.0 FROM `saving` ")
+    @Query("SELECT AVG(percentage) FROM `saving` ")
     fun getPercentage():Flow<Double?>
 
     @Query("SELECT * FROM `gold_currency`")

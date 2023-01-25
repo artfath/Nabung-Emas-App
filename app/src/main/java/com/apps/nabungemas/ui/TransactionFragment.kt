@@ -24,15 +24,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
 import com.apps.nabungemas.data.TransactionTable
-import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import com.apps.nabungemas.viewmodel.TransactionViewModel
 
-object TransactionNavigation : NavigationDestination {
-    override val route: String = "transaction"
-    override val title: Int = R.string.transaction
 
-}
 //class TransactionFragment : Fragment() {
 ////    private val viewModel: TransactionViewModel by activityViewModels {
 ////        TransactionViewModelFactory(

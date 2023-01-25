@@ -23,16 +23,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
 import com.apps.nabungemas.data.SavingTable
-import com.apps.nabungemas.data.TransactionTable
-import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import com.apps.nabungemas.viewmodel.TransactionViewModel
 
-object SavingDestination: NavigationDestination {
-    override val route: String = "saving"
-    override val title: Int = R.string.saving
 
-}
 //class SavingFragment : Fragment() {
 //    private val viewModel: TransactionViewModel by activityViewModels {
 //        TransactionViewModelFactory(

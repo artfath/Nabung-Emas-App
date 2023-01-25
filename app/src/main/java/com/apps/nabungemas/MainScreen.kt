@@ -26,7 +26,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.apps.nabungemas.ui.navigation.BottomNav
-import com.apps.nabungemas.ui.navigation.BottomNavItem
+import com.apps.nabungemas.ui.navigation.NavItem
 import com.apps.nabungemas.ui.navigation.NavigationGraph
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 
@@ -51,8 +51,8 @@ fun currentRoute(navController: NavHostController): Boolean {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val route = navBackStackEntry?.destination?.route
     return when(route){
-        BottomNavItem.AddTransaction.route -> false
-        BottomNavItem.AddSaving.route -> false
+        NavItem.AddTransaction.route -> false
+        NavItem.AddSaving.route -> false
         else->true
     }
 }

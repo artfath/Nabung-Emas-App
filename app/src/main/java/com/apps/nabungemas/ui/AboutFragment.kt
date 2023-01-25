@@ -18,15 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
-import com.apps.nabungemas.databinding.FragmentAboutBinding
-import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 
-object AboutDestination: NavigationDestination {
-    override val route: String = "about"
-    override val title: Int = R.string.about
 
-}
 class AboutFragment : Fragment() {
 //    private var _binding:FragmentAboutBinding? = null
 //

@@ -10,7 +10,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
@@ -22,11 +21,11 @@ import com.apps.nabungemas.R
 @Composable
 fun BottomNav(navController: NavController) {
     val items = listOf(
-        BottomNavItem.Home,
-        BottomNavItem.Transaction,
-        BottomNavItem.Graph,
-        BottomNavItem.Saving,
-        BottomNavItem.About,
+        NavItem.Home,
+        NavItem.Transaction,
+        NavItem.Graph,
+        NavItem.Saving,
+        NavItem.About,
     )
     BottomNavigation(
         backgroundColor = Color.White,

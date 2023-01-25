@@ -13,29 +13,29 @@ fun NavigationGraph(
     modifier: Modifier = Modifier
 ) {
     NavHost(navController = navController,
-        startDestination = BottomNavItem.Home.route,
+        startDestination = NavItem.Home.route,
         modifier = modifier){
-        composable(route = BottomNavItem.Home.route){
-            HomeScreen(navigateToAddTransaction = {navController.navigate(BottomNavItem.AddTransaction.route)})
+        composable(route = NavItem.Home.route){
+            HomeScreen(navigateToAddTransaction = {navController.navigate(NavItem.AddTransaction.route)})
         }
-        composable(route = BottomNavItem.Transaction.route){
-            TransactionScreen(navigateToAddTransaction = {navController.navigate(BottomNavItem.AddTransaction.route)})
+        composable(route = NavItem.Transaction.route){
+            TransactionScreen(navigateToAddTransaction = {navController.navigate(NavItem.AddTransaction.route)})
         }
-        composable(route = GraphDestination.route){
+        composable(route = NavItem.Graph.route){
             GraphScreen()
         }
-        composable(route = SavingDestination.route){
-            SavingScreen(navigateToAddSaving = {navController.navigate(BottomNavItem.AddSaving.route)})
+        composable(route = NavItem.Saving.route){
+            SavingScreen(navigateToAddSaving = {navController.navigate(NavItem.AddSaving.route)})
         }
-        composable(route = AboutDestination.route){
+        composable(route = NavItem.About.route){
             AboutScreen()
         }
-        composable(route = BottomNavItem.AddTransaction.route){
+        composable(route = NavItem.AddTransaction.route){
             AddTransactionScreen(
                 navigateBack = {navController.popBackStack()},
                 onNavigateUp = {navController.navigateUp()})
         }
-        composable(route = BottomNavItem.AddSaving.route){
+        composable(route = NavItem.AddSaving.route){
             AddSavingScreen(navigateBack = {navController.popBackStack()},
                 onNavigateUp = {navController.navigateUp()})
         }

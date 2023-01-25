@@ -5,6 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material3.ListItem
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Favorite
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -21,17 +25,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apps.nabungemas.R
 import com.apps.nabungemas.data.GoldCurrencyTable
-import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import com.apps.nabungemas.utils.Time.getTime
 import com.apps.nabungemas.viewmodel.GoldViewModel
 
 
-object HomeDestination : NavigationDestination {
-    override val route: String = "home"
-    override val title: Int = R.string.home
 
-}
 //class HomeFragment : Fragment() {
 //    //    private val viewModel: GoldViewModel by activityViewModels {
 ////        GoldViewModelFactory(
@@ -171,8 +170,10 @@ fun HomeScreen(
     val target by viewModel.allTargetState.collectAsState(initial = 0)
     val saving by viewModel.allSavingState.collectAsState(initial = 0)
     viewModel.getPercentage(saving?.toDouble(), target?.toDouble())
-    val percentage by viewModel.percentState.collectAsState()
-    val listHeader = listOf(target.toString(), saving.toString(), percentage)
+    val percentage by viewModel.percentageState.collectAsState(initial = 0.0)
+    val listHeader = listOf(target.toString(),
+        saving.toString(),
+        percentage.toString())
     val goldCurrency by viewModel.goldCurrencyState.collectAsState(initial = null)
     Scaffold(
         floatingActionButton = {
@@ -190,6 +191,7 @@ fun HomeScreen(
         HomeBody(
             modifier = modifier.padding(innerPadding),
             listHeader = listHeader,
+            percentage = percentage,
             goldCurrency = goldCurrency
         )
 
@@ -202,6 +204,7 @@ fun HomeScreen(
 fun HomeBody(
     modifier: Modifier,
     listHeader: List<String>,
+    percentage: Double?,
     goldCurrency: GoldCurrencyTable?
 ) {
     Column(
@@ -212,7 +215,8 @@ fun HomeBody(
     ) {
         Header(
             modifier = modifier,
-            list = listHeader
+            list = listHeader,
+            percentage = percentage
         )
         Text(
             modifier = modifier.padding(top = 24.dp, start = 16.dp),
@@ -220,15 +224,18 @@ fun HomeBody(
             style = MaterialTheme.typography.h6,
             color = Color.Gray
         )
-        GoldCard(goldCurrency = goldCurrency)
+        GoldCard(modifier = modifier, goldCurrency = goldCurrency)
         CurrencyCard(date = goldCurrency?.dateCurrency, currency = goldCurrency?.currency)
     }
 }
 
+
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Header(
     modifier: Modifier,
-    list: List<String>
+    list: List<String>,
+percentage:Double?
 ) {
     BoxWithConstraints(
         modifier = modifier
@@ -288,17 +295,38 @@ fun Header(
                         style = MaterialTheme.typography.body2,
                         color = Color.Black
                     )
-                    Text(
-                        modifier = modifier.padding(top = 8.dp),
-                        text = getTime() ?: "",
-                        style = MaterialTheme.typography.caption,
-                        color = Color.Black
-                    )
+//                    Text(
+//                        modifier = modifier.padding(top = 8.dp),
+//                        text = getTime() ?: "",
+//                        style = MaterialTheme.typography.caption,
+//                        color = Color.Black
+//                    )
+                    Row(modifier = modifier
+                        .fillMaxWidth()
+                        .padding(top = 8.dp),
+                        verticalAlignment = Alignment.CenterVertically){
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_date),
+                            contentDescription = null,
+                            modifier = modifier.size(24.dp),
+                            tint = colorResource(id = R.color.blue_500)
+                        )
+                        Text(
+                            modifier = modifier.padding(start = 4.dp),
+                            text = getTime() ?: "",
+                            style = MaterialTheme.typography.caption,
+                            color = Color.Black
+                        )
+
+
+
+                    }
+
                 }
                 Box(modifier = modifier.weight(0.4f)) {
                     Text(
                         modifier = modifier,
-                        text = list[2],
+                        text = stringResource(id = R.string.percentage,percentage ?: 0.0),
                         style = MaterialTheme.typography.h5,
                         color = Color.Black
                     )
@@ -311,7 +339,9 @@ fun Header(
 }
 
 @Composable
-fun GoldCard(goldCurrency: GoldCurrencyTable?) {
+fun GoldCard(modifier: Modifier,
+             goldCurrency: GoldCurrencyTable?) {
+    val goldDifferent = goldCurrency?.priceDifferent?: 0.0
     Box(
         Modifier
             .fillMaxWidth()
@@ -321,15 +351,17 @@ fun GoldCard(goldCurrency: GoldCurrencyTable?) {
             .background(color = Color.White)
             .padding(16.dp)
     ) {
-        Row(modifier = Modifier) {
+        Row(modifier = modifier) {
             Image(
-                modifier = Modifier.size(60.dp),
-                painter = painterResource(id = R.drawable.ic_about), contentDescription = ""
+                modifier = modifier.size(80.dp),
+                painter = painterResource(id = R.drawable.ic_gold),
+                contentDescription = ""
             )
             Column(
-                modifier = Modifier
+                modifier = modifier
                     .fillMaxWidth()
                     .weight(1f)
+                    .padding(start = 8.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.emas),
@@ -337,13 +369,13 @@ fun GoldCard(goldCurrency: GoldCurrencyTable?) {
                     color = colorResource(id = R.color.yellow_700)
                 )
                 Text(
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = modifier.padding(top = 8.dp),
                     text = goldCurrency?.dateGold ?: getTime().toString(),
                     style = MaterialTheme.typography.body2,
                     color = Color.Black
                 )
                 Text(
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = modifier.padding(top = 8.dp),
                     text = stringResource(
                         id = R.string.price_pergram,
                         goldCurrency?.priceGram24k ?: 0.0
@@ -353,7 +385,7 @@ fun GoldCard(goldCurrency: GoldCurrencyTable?) {
                 )
 
                 Text(
-                    modifier = Modifier.padding(top = 8.dp),
+                    modifier = modifier.padding(top = 8.dp),
                     text = stringResource(
                         id = R.string.price_previous,
                         goldCurrency?.prevPrice ?: 0.0
@@ -361,15 +393,35 @@ fun GoldCard(goldCurrency: GoldCurrencyTable?) {
                     style = MaterialTheme.typography.caption,
                     color = Color.Black
                 )
-                Text(
-                    modifier = Modifier.padding(top = 8.dp),
-                    text = stringResource(
-                        id = R.string.price_double,
-                        goldCurrency?.priceDifferent ?: 0.0
-                    ),
-                    style = MaterialTheme.typography.caption,
-                    color = Color.Black
-                )
+                Row(modifier = modifier
+                    .fillMaxWidth()
+                    .padding(top = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically) {
+
+                    if(goldDifferent < 0.0){
+                        Icon(modifier = modifier.size(24.dp),
+                            painter = painterResource(id = R.drawable.ic_down),
+                            contentDescription = null,
+                            tint = colorResource(id = R.color.red_500)
+                        )
+                    }else {
+                        Icon(modifier = modifier.size(24.dp),
+                            painter = painterResource(id = R.drawable.ic_up),
+                            contentDescription = null,
+                            tint = colorResource(id = R.color.green_500)
+                        )
+                    }
+                    Text(
+                        modifier = Modifier.padding(start = 4.dp),
+                        text = stringResource(
+                            id = R.string.price_double,
+                            goldDifferent
+                        ),
+                        style = MaterialTheme.typography.caption,
+                        color = Color.Black
+
+                    )
+                }
             }
 
         }
@@ -394,14 +446,15 @@ fun CurrencyCard(
 
         Row(modifier = Modifier) {
             Image(
-                modifier = Modifier.size(60.dp),
-                painter = painterResource(id = R.drawable.ic_about),
+                modifier = Modifier.size(80.dp),
+                painter = painterResource(id = R.drawable.ic_forex),
                 contentDescription = ""
             )
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .weight(1f)
+                    .padding(start = 8.dp)
             ) {
                 Text(
                     text = stringResource(id = R.string.forex),
@@ -439,14 +492,14 @@ fun CurrencyCard(
 fun HomePreview() {
     MyApplicationTheme(darkTheme = false) {
         Column() {
-            Header(modifier = Modifier, listOf("90000", "80000", "40 %"))
+            Header(modifier = Modifier, listOf("90000", "80000", "40 %"), percentage = 0.0)
             Text(
                 modifier = Modifier.padding(top = 24.dp, start = 16.dp),
                 text = stringResource(id = R.string.referensi_hari_ini),
                 style = MaterialTheme.typography.h6,
                 color = Color.Gray
             )
-            GoldCard(
+            GoldCard(modifier = Modifier,
                 goldCurrency = GoldCurrencyTable(
                     0,
                     15000.0,

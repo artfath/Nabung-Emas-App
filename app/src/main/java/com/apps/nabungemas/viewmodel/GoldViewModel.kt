@@ -46,12 +46,15 @@ class GoldViewModel(
         repository.getTotalTarget().asLiveData()
     val goldCurrency: LiveData<GoldCurrencyTable?> =
         repository.getGoldCurrency().asLiveData()
+    private val _percentState = MutableStateFlow("")
+    val percentState: StateFlow<String> = _percentState.asStateFlow()
 
     val allTargetState: Flow<Long?> = repository.getTotalTarget()
     val allSavingState: Flow<Long?> = repository.getTotalSaving()
-    private val _percentState = MutableStateFlow("")
-    val percentState: StateFlow<String> = _percentState.asStateFlow()
+
     val goldCurrencyState: Flow<GoldCurrencyTable?> = repository.getGoldCurrency()
+
+    val percentageState: Flow<Double?> = repository.getPercentage()
 
     init {
         getGoldandCurrency()

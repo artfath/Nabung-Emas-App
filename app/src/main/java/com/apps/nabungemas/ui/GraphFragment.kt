@@ -13,23 +13,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
-import com.apps.nabungemas.databinding.FragmentGraphBinding
-import com.apps.nabungemas.network.GoldPriceApi
-import com.apps.nabungemas.ui.navigation.NavigationDestination
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
-import kotlinx.coroutines.launch
 
-object GraphDestination: NavigationDestination {
-    override val route: String = "graph"
-    override val title: Int = R.string.graph
 
-}
 
 class GraphFragment : Fragment() {
 //    private var _binding: FragmentGraphBinding? = null
