@@ -8,6 +8,7 @@ import androidx.lifecycle.*
 import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.data.TransactionTable
 import com.apps.nabungemas.repository.TransactionsRepository
+import com.apps.nabungemas.utils.Time
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
@@ -366,7 +367,7 @@ data class TransactionUiState(
 
 data class TransactionTableDetails(
     val id: Int = 0,
-    val time: String = "",
+    val time: String = Time.getTime() ?: "",
     val savingCategory: String = "",
     val goldPrice: String = "",
     val goldQuantity: String = "",

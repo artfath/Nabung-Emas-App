@@ -169,7 +169,7 @@ fun AddTransactionScreen(
                 navigateUp = onNavigateUp
             )
         },
-        backgroundColor = Color(0xFFFFFDF5)
+        backgroundColor = MaterialTheme.colors.background
     )
     { innerPadding ->
         AddTransactionBody(
@@ -194,7 +194,6 @@ fun AddTransactionBody(
     onCancelClick: () -> Unit,
     onSaveClick: () -> Unit
 ) {
-
     Column(
         modifier = modifier
             .fillMaxWidth(1f)
@@ -215,10 +214,10 @@ fun AddTransactionBody(
                     .weight(1f)
                     .height(56.dp),
                 onClick = onCancelClick,
-                border = BorderStroke(2.dp, colorResource(id = R.color.yellow_500)),
+                border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    contentColor = colorResource(id = R.color.yellow_500),
+                    contentColor = MaterialTheme.colors.primary,
                     backgroundColor = Color.White
                 )
             ) {
@@ -240,7 +239,7 @@ fun AddTransactionBody(
                 enabled = transactionUiState.isEntryValid,
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(id = R.color.yellow_500),
+                    backgroundColor = MaterialTheme.colors.primary,
                     contentColor = Color.White
                 )
             ) {
@@ -274,12 +273,15 @@ fun InputForm(
 
     val calendar = Calendar.getInstance()
     val dateFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-
-
-//    val date = remember { mutableStateOf("") }
-
-
-
+    val datePickerDialog = DatePickerDialog(
+        context,
+        {_: DatePicker, year: Int, month: Int, day: Int ->
+            calendar.set(year, month, day)
+            onValueChange(transactionTable.copy(time = dateFormat.format(calendar.time)))
+        }, calendar.get(Calendar.YEAR),
+        calendar.get(Calendar.MONTH),
+        calendar.get(Calendar.DAY_OF_MONTH)
+    )
 
 
     ExposedDropdownMenuBox(modifier = modifier,
@@ -289,11 +291,10 @@ fun InputForm(
         OutlinedTextField(modifier = modifier.fillMaxWidth(),
             readOnly = true,
             value = transactionTable.savingCategory,
-            onValueChange = {
-//                    selectedOptionText = it
-            },
+            onValueChange = {},
             label = { Text(text = stringResource(id = R.string.category_saving)) },
-            colors = TextFieldDefaults.textFieldColors(
+            textStyle = MaterialTheme.typography.body1,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
                 backgroundColor = Color.White
             ),
             trailingIcon = {
@@ -322,30 +323,8 @@ fun InputForm(
 
         }
     }
-    val datePickerDialog = DatePickerDialog(
-        context,
-        {_: DatePicker, year: Int, month: Int, day: Int ->
-            calendar.set(year, month, day)
-            onValueChange(transactionTable.copy(time = dateFormat.format(calendar.time)))
-        }, calendar.get(Calendar.YEAR),
-        calendar.get(Calendar.MONTH),
-        calendar.get(Calendar.DAY_OF_MONTH)
-    )
 
-//    val dialogDateState = rememberMaterialDialogState()
-//    MaterialDialog(dialogState = dialogDateState,
-//    buttons = {
-//        positiveButton("Ok")
-//        negativeButton("Cancel")
-//    }) {
-//        datepicker(initialDate = LocalDate.now(),
-//        title = "Select Date"){date ->
-////            val dateFormat = DateTimeFormatter.ofPattern("dd MMM yyyy", Locale.getDefault())
-////            val stringDate = dateFormat.format(date)
-//            onValueChange(transactionTable.copy(time = dateFormat.format(date)))
-//
-//        }
-//    }
+
     Row(
         modifier = modifier.padding(top = 16.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -353,11 +332,12 @@ fun InputForm(
         OutlinedTextField(modifier = modifier
             .weight(1f),
             readOnly = true,
-            colors = TextFieldDefaults.textFieldColors(backgroundColor = Color.White),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                backgroundColor = Color.White),
             value = transactionTable.time,
             label = { Text(text = stringResource(id = R.string.date)) },
+            textStyle = MaterialTheme.typography.body1,
             onValueChange = {
-//                onValueChange(transactionTable.copy(time = getTime().toString()))
             })
         IconButton(modifier = modifier.size(56.dp),
             onClick = { datePickerDialog.show() }) {
@@ -365,25 +345,22 @@ fun InputForm(
                 imageVector = ImageVector.vectorResource(id = R.drawable.ic_date),
                 contentDescription = null,
                 modifier = Modifier.size(36.dp),
-                tint = Color(0xFF00b0ff)
+                tint = colorResource(id = R.color.blue_500)
             )
 
         }
     }
 
-//        Row(
-//            modifier = modifier.padding(top = 16.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
     OutlinedTextField(modifier = modifier
         .padding(top = 16.dp)
         .fillMaxWidth(),
-        colors = TextFieldDefaults.textFieldColors(
+        colors = TextFieldDefaults.outlinedTextFieldColors(
             backgroundColor = Color.White
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         value = transactionTable.goldPrice,
         label = { Text(text = stringResource(id = R.string.price_hint)) },
+        textStyle = MaterialTheme.typography.body1,
         leadingIcon = {
             Text(
                 text = stringResource(id = R.string.rupiah),
@@ -392,54 +369,26 @@ fun InputForm(
             )
         },
         onValueChange = { onValueChange(transactionTable.copy(goldPrice = it)) })
-//            Box(
-//                modifier = modifier.size(56.dp),
-//                contentAlignment = Alignment.Center,
-//            ) {
-//                Text(
-//                    textAlign = TextAlign.Center, modifier = modifier.padding(4.dp),
-//                    text = stringResource(id = R.string.rupiah),
-//                    style = MaterialTheme.typography.h6
-//                )
-//            }
 
-
-//        }
-
-
-//        Row(modifier = modifier.padding(top = 16.dp),
-//            verticalAlignment = Alignment.CenterVertically) {
     OutlinedTextField(modifier = modifier
         .padding(top = 16.dp)
         .fillMaxWidth(),
-        colors = TextFieldDefaults.textFieldColors(
+        colors = TextFieldDefaults.outlinedTextFieldColors(
             backgroundColor = Color.White
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
         value = transactionTable.goldQuantity,
         trailingIcon = {
             Text(
-                textAlign = TextAlign.Center, modifier = modifier.padding(4.dp),
+                textAlign = TextAlign.Center, modifier = modifier.padding(8.dp),
                 text = stringResource(id = R.string.grams),
                 style = MaterialTheme.typography.h6,
                 color = Color.Black
             )
         },
         label = { Text(text = stringResource(id = R.string.quantity_hint)) },
+        textStyle = MaterialTheme.typography.body1,
         onValueChange = { onValueChange(transactionTable.copy(goldQuantity = it)) })
-//            Box(
-//                modifier = modifier.size(56.dp),
-//                contentAlignment = Alignment.Center,
-//            ) {
-//                Text(
-//                    textAlign = TextAlign.Center, modifier = modifier.padding(4.dp),
-//                    text = stringResource(id = R.string.grams),
-//                    style = MaterialTheme.typography.h6
-//                )
-//            }
-
-
-//        }
 
     ExposedDropdownMenuBox(modifier = modifier.padding(top = 16.dp),
         expanded = expandProduct,
@@ -447,12 +396,11 @@ fun InputForm(
     ) {
         OutlinedTextField(modifier = modifier.fillMaxWidth(),
             value = transactionTable.product,
-            onValueChange = {
-//                selectedTextProduct = it
-            },
+            onValueChange = {},
             readOnly = true,
             label = { Text(text = stringResource(id = R.string.product)) },
-            colors = TextFieldDefaults.textFieldColors(
+            textStyle = MaterialTheme.typography.body1,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
                 backgroundColor = Color.White
             ),
             trailingIcon = {
@@ -479,8 +427,6 @@ fun InputForm(
                 }
             }
         }
-
-
     }
 }
 
@@ -495,12 +441,17 @@ fun AddTransactionPreview() {
                     version = 0,
                     navigateUp = { })
             },
-            backgroundColor = Color(0xFFFFFDF5)
+            backgroundColor = MaterialTheme.colors.background
         )
         { innerPadding ->
             AddTransactionBody(
                 modifier = Modifier.padding(innerPadding),
-                transactionUiState = TransactionUiState(),
+                transactionUiState = TransactionUiState(
+                    transactionDetails = TransactionTableDetails(
+                        savingCategory = "Tabungan Menikah",
+                        goldPrice = "900000",
+                    goldQuantity = "1.0",
+                    product = "Antam")),
                 onCancelClick = { },
                 onSaveClick = {
                 }

@@ -121,15 +121,15 @@ fun TransactionBody(
     modifier: Modifier,
     onDeletedItem:(TransactionTable)->Unit
 ) {
-    Column() {
+    Column(modifier = modifier.fillMaxHeight()) {
         if (itemList.isNullOrEmpty()) {
             Text(text = "No data")
         } else {
-            TransactionList(modifier = modifier, itemList = itemList, onDeletedItem = onDeletedItem)
+            TransactionList(modifier = modifier,
+                itemList = itemList,
+                onDeletedItem = onDeletedItem)
         }
     }
-
-
 }
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -142,26 +142,6 @@ fun TransactionList(modifier: Modifier,
     LazyColumn() {
         items(items = itemList, key = {it.id}) {
             TransactionItem(modifier = modifier, it, onDeletedItem = onDeletedItem)
-//            SwipeToDismiss(state = dismissState,
-//                directions = setOf(
-//                    DismissDirection.EndToStart
-//                ),
-//                dismissThresholds = { direction ->
-//                    FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1f else 0.05f)
-//                },
-//                background = {},
-//            dismissContent = {
-//                Row(
-//                    modifier= Modifier
-//                        .fillMaxWidth()
-//                        .fillMaxHeight(),
-//                    verticalAlignment = Alignment.CenterVertically,
-//                    horizontalArrangement = Arrangement.Center
-//                ) {
-//                    TransactionItem(modifier = modifier, it)
-//                }
-//            })
-
         }
 
     }
@@ -256,20 +236,29 @@ fun DeletedConfirmationAlert(modifier: Modifier,
     onCorfirm:(Boolean)->Unit
 ) {
     AlertDialog(onDismissRequest = { /*TODO*/ },
-        title = {Text(text = "Delete Item")},
-        text = {Text(text = "Do you want to deleted")},
+        title = {Text(text = "Delete Item", style = MaterialTheme.typography.h6)},
+        text = {Text(text = "Do you want to deleted?")},
+        backgroundColor = MaterialTheme.colors.background,
         dismissButton = {
             TextButton(onClick = { onCorfirm(false) }) {
-                Text(text = "no")
+                Text(text = "No")
 
             }
         },
     confirmButton = {
         TextButton(onClick = { onCorfirm(true) }) {
-            Text(text = "yes")
+            Text(text = "Yes")
             
         }
     })
+}
+
+@Preview(showBackground = true)
+@Composable
+fun DialogPreview() {
+    MyApplicationTheme(darkTheme = false) {
+        DeletedConfirmationAlert(modifier = Modifier, onCorfirm = {})
+    }
 }
 
 @Preview(showBackground = true)

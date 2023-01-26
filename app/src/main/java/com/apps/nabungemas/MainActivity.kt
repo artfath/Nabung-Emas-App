@@ -16,39 +16,18 @@ import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.apps.nabungemas.databinding.ActivityMainBinding
+import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import kotlin.text.Typography.dagger
 
 
 class MainActivity : ComponentActivity() {
-    private lateinit var binding: ActivityMainBinding
-    private lateinit var navController: NavController
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainScreen()
+            MyApplicationTheme{
+                MainScreen()
+            }
         }
-//        binding = ActivityMainBinding.inflate(layoutInflater)
-//        setContentView(binding.root)
-//        val navHostFragment=supportFragmentManager
-//            .findFragmentById(R.id.fragment_container_view) as NavHostFragment
-//        val navigationTitle=navHostFragment.navController
-//        setupActionBarWithNavController(navigationTitle)
-
-
-//        navController = findNavController(R.id.fragment_container_view)
-//        binding.bottomNavigation.setupWithNavController(navController)
-//
-//        navController.addOnDestinationChangedListener { _, destination, _ ->
-//            when (destination.id) {
-//                R.id.addTransactionFragment ->
-//                    binding.bottomNavigation.visibility = View.GONE
-//                else ->
-//                    binding.bottomNavigation.visibility = View.VISIBLE
-//            }
-//        }
     }
-
-
 }
 
