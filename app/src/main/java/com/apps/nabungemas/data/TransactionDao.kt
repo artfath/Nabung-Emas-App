@@ -6,16 +6,18 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface TransactionDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    suspend fun insertData(item:TransactionTable)
+    suspend fun insertTransactions(item:TransactionTable)
 
     @Update
-    suspend fun updateData(item: TransactionTable)
+    suspend fun updateTransactions(item: TransactionTable)
 
     @Delete
-    suspend fun deleteData(item: TransactionTable)
+    suspend fun deleteTransactions(item: TransactionTable)
 
     @Query("SELECT * FROM `transaction` ORDER BY time ASC")
     fun getTransactions():Flow<List<TransactionTable>>
+    @Query("SELECT * FROM `transaction` WHERE id = :id")
+    fun getTransactionId(id:Int):Flow<TransactionTable>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertSaving(item:SavingTable)

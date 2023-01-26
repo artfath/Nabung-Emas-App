@@ -174,8 +174,8 @@ fun AddTransactionScreen(
     { innerPadding ->
         AddTransactionBody(
             modifier = Modifier.padding(innerPadding),
-            transactionUiState = viewModel.transactionUiState,
-            onValueChange = viewModel::updateTransactionUiState,
+            transactionUiState = viewModel.addTransactionUiState,
+            onValueChange = viewModel::updateAddTransactionUiState,
             onCancelClick = onNavigateUp,
             onSaveClick = {
                 viewModel.addNewTransaction()

@@ -6,12 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -110,7 +107,10 @@ fun TransactionScreen(
     { innerPadding ->
         TransactionBody(
             itemList = listTransaction,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            onDeletedItem = {
+                viewModel.deleteTransaction(it)
+            }
         )
     }
 }
@@ -118,33 +118,62 @@ fun TransactionScreen(
 @Composable
 fun TransactionBody(
     itemList: List<TransactionTable>?,
-    modifier: Modifier
+    modifier: Modifier,
+    onDeletedItem:(TransactionTable)->Unit
 ) {
     Column() {
         if (itemList.isNullOrEmpty()) {
             Text(text = "No data")
         } else {
-            TransactionList(modifier = modifier, itemList)
+            TransactionList(modifier = modifier, itemList = itemList, onDeletedItem = onDeletedItem)
         }
     }
 
 
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TransactionList(modifier: Modifier, itemList: List<TransactionTable>) {
+fun TransactionList(modifier: Modifier,
+                    itemList: List<TransactionTable>,
+                    onDeletedItem:(TransactionTable)->Unit
+) {
+    val dismissState = rememberDismissState()
     LazyColumn() {
-        items(items = itemList) {
-            TransactionItem(modifier = modifier, it)
+        items(items = itemList, key = {it.id}) {
+            TransactionItem(modifier = modifier, it, onDeletedItem = onDeletedItem)
+//            SwipeToDismiss(state = dismissState,
+//                directions = setOf(
+//                    DismissDirection.EndToStart
+//                ),
+//                dismissThresholds = { direction ->
+//                    FractionalThreshold(if (direction == DismissDirection.EndToStart) 0.1f else 0.05f)
+//                },
+//                background = {},
+//            dismissContent = {
+//                Row(
+//                    modifier= Modifier
+//                        .fillMaxWidth()
+//                        .fillMaxHeight(),
+//                    verticalAlignment = Alignment.CenterVertically,
+//                    horizontalArrangement = Arrangement.Center
+//                ) {
+//                    TransactionItem(modifier = modifier, it)
+//                }
+//            })
+
         }
+
     }
 }
 
 @Composable
 fun TransactionItem(
     modifier: Modifier,
-    transaction: TransactionTable
+    transaction: TransactionTable,
+    onDeletedItem:(TransactionTable)->Unit
 ) {
+    var deleteConfirm by rememberSaveable { mutableStateOf(false) }
     Box(
         Modifier
             .fillMaxWidth()
@@ -164,7 +193,9 @@ fun TransactionItem(
                 painter = painterResource(id = R.drawable.ic_transaction),
                 contentDescription = ""
             )
-            Column(modifier = modifier.padding(6.dp)) {
+            Column(modifier = modifier
+                .padding(6.dp)
+                .weight(1f)) {
                 Text(text = transaction.savingCategory, style = MaterialTheme.typography.h6)
                 Row() {
                     Text(
@@ -195,9 +226,50 @@ fun TransactionItem(
                     )
                 }
             }
+            IconButton(modifier = modifier
+                .size(24.dp)
+                .padding(end = 4.dp),
+                onClick = { deleteConfirm = true }) {
+                Icon(
+                    modifier = modifier,
+                    painter = painterResource(id = R.drawable.ic_delete),
+                    contentDescription = ""
+                )
+            }
+            if(deleteConfirm){
+                DeletedConfirmationAlert(modifier = modifier,
+                    onCorfirm = {
+                        deleteConfirm = false
+                        if(it){
+                            onDeletedItem(transaction)
+                        }
+                })
+            }
+
         }
     }
 
+}
+
+@Composable
+fun DeletedConfirmationAlert(modifier: Modifier,
+    onCorfirm:(Boolean)->Unit
+) {
+    AlertDialog(onDismissRequest = { /*TODO*/ },
+        title = {Text(text = "Delete Item")},
+        text = {Text(text = "Do you want to deleted")},
+        dismissButton = {
+            TextButton(onClick = { onCorfirm(false) }) {
+                Text(text = "no")
+
+            }
+        },
+    confirmButton = {
+        TextButton(onClick = { onCorfirm(true) }) {
+            Text(text = "yes")
+            
+        }
+    })
 }
 
 @Preview(showBackground = true)
@@ -212,7 +284,8 @@ fun TransactionItemPreview() {
             20000,
             1.0,
             "antam"
-        )
+        ),
+        onDeletedItem = {}
     )
 }
 
@@ -233,9 +306,11 @@ fun TransactionPreview() {
         )
         { innerPadding ->
             TransactionBody(
-                itemList = listOf(TransactionTable(savingCategory = "Tabungan Menikah"),
-                    TransactionTable(savingCategory = "Tabungan Rumah")),
-                modifier = Modifier.padding(innerPadding)
+                itemList = listOf(
+                    TransactionTable(id = 0, savingCategory = "Tabungan Menikah", product = "antam"),
+                    TransactionTable(id = 1, savingCategory = "Tabungan Rumah", product = "UBS")),
+                modifier = Modifier.padding(innerPadding),
+                onDeletedItem = {}
             )
         }
     }

@@ -100,13 +100,13 @@ fun MainTopAppBar(
                         tint = Color.White
                     )
                 }
-                IconButton(onClick = navigateDelete) {
-                    Icon(
-                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete),
-                        contentDescription = "",
-                        tint = Color.White
-                    )
-                }
+//                IconButton(onClick = navigateDelete) {
+//                    Icon(
+//                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete),
+//                        contentDescription = "",
+//                        tint = Color.White
+//                    )
+//                }
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color(0xFFffd740))

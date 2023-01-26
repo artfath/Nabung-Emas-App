@@ -6,13 +6,14 @@ import com.apps.nabungemas.data.TransactionTable
 import kotlinx.coroutines.flow.Flow
 
 interface TransactionsRepository {
-    suspend fun insertData(item: TransactionTable)
+    suspend fun insertTransactions(item: TransactionTable)
 
-    suspend fun updateData(item: TransactionTable)
+    suspend fun updateTransactions(item: TransactionTable)
 
-    suspend fun deleteData(item: TransactionTable)
+    suspend fun deleteTransactions(item: TransactionTable)
 
     fun getTransactions(): Flow<List<TransactionTable>>
+    fun getTransactionId(id:Int):Flow<TransactionTable>
 
     suspend fun insertSaving(item: SavingTable)
 

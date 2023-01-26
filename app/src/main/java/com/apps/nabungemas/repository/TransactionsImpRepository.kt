@@ -4,20 +4,23 @@ import com.apps.nabungemas.data.*
 import kotlinx.coroutines.flow.Flow
 
 class TransactionsImpRepository(private val transactionDao: TransactionDao):TransactionsRepository {
-    override suspend fun insertData(item: TransactionTable) =
-        transactionDao.insertData(item)
+    override suspend fun insertTransactions(item: TransactionTable) =
+        transactionDao.insertTransactions(item)
 
 
-    override suspend fun updateData(item: TransactionTable) =
-        transactionDao.updateData(item)
+    override suspend fun updateTransactions(item: TransactionTable) =
+        transactionDao.updateTransactions(item)
 
 
-    override suspend fun deleteData(item: TransactionTable) =
-        transactionDao.deleteData(item)
+    override suspend fun deleteTransactions(item: TransactionTable) =
+        transactionDao.deleteTransactions(item)
 
 
     override fun getTransactions(): Flow<List<TransactionTable>> =
          transactionDao.getTransactions()
+
+    override fun getTransactionId(id: Int): Flow<TransactionTable> =
+        transactionDao.getTransactionId(id)
 
 
     override suspend fun insertSaving(item: SavingTable) =

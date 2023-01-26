@@ -109,7 +109,7 @@ viewModel: TransactionViewModel=viewModel(factory=AppViewModelProvider.Factory))
     { innerPadding ->
         AddSavingBody(
             modifier = Modifier.padding(innerPadding),
-            savingUiState = viewModel.savingUiState ,
+            savingUiState = viewModel.addSavingUiState ,
             onValueChange = viewModel::updateSavingUiState,
             onCancelClick = onNavigateUp,
             onSaveClick = {

@@ -8,7 +8,7 @@ import androidx.lifecycle.*
 import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.data.TransactionTable
 import com.apps.nabungemas.repository.TransactionsRepository
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 
 class TransactionViewModel(private val repository: TransactionsRepository) : ViewModel() {
@@ -28,15 +28,23 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
     val allTransactionState: Flow<List<TransactionTable>> = repository.getTransactions()
     val allSavingState: Flow<List<SavingTable>> = repository.getAllSaving()
 
-    var transactionUiState by mutableStateOf(TransactionUiState())
+    var addTransactionUiState by mutableStateOf(TransactionUiState())
         private set
 
-    var savingUiState by mutableStateOf(SavingUiState())
+    var addSavingUiState by mutableStateOf(SavingUiState())
         private set
 
-    fun deleteTransaction() {
-        viewModelScope.launch { }
-    }
+    var transactionUiState: StateFlow<TransactionTable> =
+        repository.getTransactionId(0)
+            .filterNotNull()
+            .map {
+                it
+            }
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.WhileSubscribed(5_000L),
+                initialValue = TransactionTable()
+            )
 
 
     fun getSaving(categorySaving: String) {
@@ -58,7 +66,6 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
     }
 
 
-
     /**
      * Transaction block
      */
@@ -66,24 +73,49 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
 
     fun addNewTransaction() {
 //        val newTransaction = getNewTransaction(category, date, price, quantity, product)
-        insertTransaction(transactionUiState.transactionDetails.getNewTransaction())
+        insertTransaction(addTransactionUiState.transactionDetails.getNewTransaction())
         viewModelScope.launch {
             try {
-                val dataCategory = repository.findCategorySaving(transactionUiState.transactionDetails.savingCategory)
-                if (dataCategory != null) {
-                    addNewSavings(transactionUiState.transactionDetails.savingCategory,
-                        dataCategory.target.toString())
-                }
+                val dataCategory =
+                    repository.findCategorySaving(addTransactionUiState.transactionDetails.savingCategory)
+                val target = dataCategory?.target ?: 0L
+
+                addNewSavings(
+                    addTransactionUiState.transactionDetails.savingCategory,
+                    target.toString()
+                )
+
             } catch (e: Exception) {
 
             }
         }
     }
-    private fun insertTransaction(transaction: TransactionTable) {
+
+    fun deleteTransaction(transaction: TransactionTable) {
         viewModelScope.launch {
-            repository.insertData(transaction)
+            repository.deleteTransactions(transaction)
+            try {
+                val dataCategory =
+                    repository.findCategorySaving(transaction.savingCategory)
+                val target = dataCategory?.target ?: 0L
+
+                addNewSavings(
+                    transaction.savingCategory,
+                    target.toString()
+                )
+
+            } catch (e: Exception) {
+
+            }
         }
     }
+
+    private fun insertTransaction(transaction: TransactionTable) {
+        viewModelScope.launch {
+            repository.insertTransactions(transaction)
+        }
+    }
+
     private fun TransactionTableDetails.getNewTransaction(
     ): TransactionTable {
         return TransactionTable(
@@ -94,7 +126,6 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
             product = product
         )
     }
-
 
 
     /**
@@ -210,20 +241,23 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
 //
 //    }
     fun addNewSavings(
-        category: String = savingUiState.savingDetails.savingCategory,
-        target: String = savingUiState.savingDetails.target
+        category: String = addSavingUiState.savingDetails.savingCategory,
+        target: String = addSavingUiState.savingDetails.target
     ) {
         viewModelScope.launch {
             try {
                 val dataCategory = repository.findCategorySaving(category)
                 val totalSaving = repository.getSaving(category) ?: 0
-                val percentage =
+                val percentage = if(target.toDouble() == 0.0){
+                     0.0
+                }else{
                     (totalSaving.toDouble().div(target.toDouble()).times(100))
-                if(dataCategory?.savingCategory.isNullOrEmpty() ){
+                }
 
+                if (dataCategory?.savingCategory.isNullOrEmpty()) {
                     val newSaving = getNewSaving(category, target, totalSaving, percentage)
                     insertSaving(newSaving)
-                }else{
+                } else {
                     val updatedItem =
                         getUpdatedSaving(
                             dataCategory!!.id,
@@ -234,11 +268,12 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
                         )
                     updateSaving(updatedItem)
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
 
             }
         }
     }
+
     private fun getNewSaving(
         catagory: String,
         target: String,
@@ -252,7 +287,6 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
             percentage = percentage,
         )
     }
-
 
 
     private fun getUpdatedSaving(
@@ -276,6 +310,7 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
             repository.updateSaving(saving)
         }
     }
+
     private fun insertSaving(saving: SavingTable) {
         viewModelScope.launch {
             repository.insertSaving(saving)
@@ -283,42 +318,45 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
     }
 
 
-
-    fun updateTransactionUiState(transactionDetails: TransactionTableDetails) {
-        transactionUiState =
-            TransactionUiState(transactionDetails = transactionDetails,
-                isEntryValid = isEntryTransactionValid(transactionDetails))
+    fun updateAddTransactionUiState(transactionDetails: TransactionTableDetails) {
+        addTransactionUiState =
+            TransactionUiState(
+                transactionDetails = transactionDetails,
+                isEntryValid = isEntryTransactionValid(transactionDetails)
+            )
     }
 
     fun isEntryTransactionValid(
-        uiState: TransactionTableDetails = transactionUiState.transactionDetails
+        uiState: TransactionTableDetails = addTransactionUiState.transactionDetails
     ): Boolean {
         return if (uiState.savingCategory.isBlank() || uiState.time.isBlank() ||
             uiState.goldPrice.isBlank() || uiState.goldQuantity.isBlank() ||
-            uiState.product.isBlank()) {
+            uiState.product.isBlank()
+        ) {
             false
-        }else{
+        } else {
             true
         }
     }
-    fun updateSavingUiState(savingDetails: SavingDetails){
-        savingUiState = SavingUiState(savingDetails=savingDetails,
-        isEntryValid = isEntrySavingValid(savingDetails))
+
+    fun updateSavingUiState(savingDetails: SavingDetails) {
+        addSavingUiState = SavingUiState(
+            savingDetails = savingDetails,
+            isEntryValid = isEntrySavingValid(savingDetails)
+        )
     }
 
     fun isEntrySavingValid(
-        uiState: SavingDetails = savingUiState.savingDetails
+        uiState: SavingDetails = addSavingUiState.savingDetails
     ): Boolean {
         return if (uiState.savingCategory.isBlank() || uiState.target.isBlank()) {
             false
-        }else{
+        } else {
             true
         }
     }
 
 }
-
-
 
 
 data class TransactionUiState(
@@ -327,12 +365,12 @@ data class TransactionUiState(
 )
 
 data class TransactionTableDetails(
-    val id: Int=0,
-    val time:String="",
-    val savingCategory:String="",
-    val goldPrice:String="",
-    val goldQuantity:String="",
-    val product:String=""
+    val id: Int = 0,
+    val time: String = "",
+    val savingCategory: String = "",
+    val goldPrice: String = "",
+    val goldQuantity: String = "",
+    val product: String = ""
 )
 
 data class SavingUiState(
@@ -341,6 +379,6 @@ data class SavingUiState(
 )
 
 data class SavingDetails(
-    val savingCategory:String="",
-    val target:String="",
+    val savingCategory: String = "",
+    val target: String = "",
 )
