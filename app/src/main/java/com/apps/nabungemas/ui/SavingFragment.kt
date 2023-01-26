@@ -5,17 +5,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -112,26 +111,29 @@ viewModel: TransactionViewModel=viewModel(factory = AppViewModelProvider.Factory
                 version = 1,
                 navigateAdd = navigateToAddSaving)
         },
-        backgroundColor = Color(0xFFF4F9FB)
+        backgroundColor = colorResource(id = R.color.grey_100)
     )
     { innerPadding ->
         SavingBody(
             itemList = listSaving,
-            modifier = Modifier.padding(innerPadding)
+            modifier = Modifier.padding(innerPadding),
+            onDeletedItem = {
+                viewModel.deleteSaving(it)
+            }
         )
     }
 }
 
 @Composable
-fun SavingBody(
+fun SavingBody(modifier: Modifier,
     itemList: List<SavingTable>?,
-    modifier: Modifier
+    onDeletedItem:(SavingTable)->Unit
 ) {
     Column() {
         if (itemList.isNullOrEmpty()) {
             Text(text = "No data")
         } else {
-            SavingList(modifier = modifier,itemList)
+            SavingList(modifier = modifier,itemList, onDeletedItem = onDeletedItem)
         }
     }
 
@@ -140,18 +142,21 @@ fun SavingBody(
 
 @Composable
 fun SavingList(modifier: Modifier,
-               itemList: List<SavingTable>) {
+               itemList: List<SavingTable>,
+               onDeletedItem:(SavingTable)->Unit) {
     LazyColumn() {
         items(items = itemList) {
-            SavingItem(modifier = modifier,it)
+            SavingItem(modifier = modifier,it, onDeletedItem = onDeletedItem)
         }
     }
 }
 
 @Composable
 fun SavingItem(modifier: Modifier,
-               saving: SavingTable
+               saving: SavingTable,
+               onDeletedItem:(SavingTable)->Unit
 ) {
+    var deleteConfirm by rememberSaveable { mutableStateOf(false) }
     Box(
         Modifier
             .fillMaxWidth()
@@ -167,9 +172,35 @@ fun SavingItem(modifier: Modifier,
                 Box(modifier = modifier
                     .fillMaxWidth()
                     .background(color = Color(0xFFFFFDF5))) {
-                    Text(modifier = modifier.padding(8.dp),
-                        text = saving.savingCategory ?: "",
-                        style = MaterialTheme.typography.h6)
+                    Row(modifier = modifier
+                        .fillMaxWidth()
+                        .padding(8.dp),
+                        verticalAlignment = Alignment.CenterVertically) {
+                        Text(modifier = modifier.weight(1f),
+                            text = saving.savingCategory ?: "",
+                            style = MaterialTheme.typography.h6)
+                        IconButton(modifier = modifier
+                            .size(24.dp)
+                            .padding(end = 4.dp),
+                            onClick = { deleteConfirm = true }) {
+                            Icon(
+                                modifier = modifier,
+                                painter = painterResource(id = R.drawable.ic_delete),
+                                tint = colorResource(id = R.color.grey_500),
+                                contentDescription = ""
+                            )
+                        }
+                        if(deleteConfirm){
+                            DeletedConfirmationAlert(modifier = modifier,
+                                onCorfirm = {
+                                    deleteConfirm = false
+                                    if(it){
+                                        onDeletedItem(saving)
+                                    }
+                                })
+                        }
+                    }
+
                 }
 
                 Row(modifier = modifier
@@ -222,7 +253,8 @@ fun SavingItem(modifier: Modifier,
 @Composable
 fun SavingItemPreview(){
     SavingItem(modifier = Modifier,
-        saving = SavingTable(savingCategory = "Tabungan Menikah", target = 9000000, totalSaving = 900000, percentage = 9.0))
+        saving = SavingTable(savingCategory = "Tabungan Menikah", target = 9000000, totalSaving = 900000, percentage = 9.0),
+    onDeletedItem = {})
 }
 
 
@@ -243,7 +275,8 @@ fun SavingPreview() {
             SavingBody(
                 itemList = listOf(SavingTable(savingCategory = "Tabungan Menikah", target = 9000000, totalSaving = 900000, percentage = 9.0),
                     SavingTable(savingCategory = "Tabungan Rumah", target = 9000000, totalSaving = 900000, percentage = 11.0)),
-                modifier = Modifier.padding(innerPadding)
+                modifier = Modifier.padding(innerPadding),
+                onDeletedItem = {}
             )
         }
     }

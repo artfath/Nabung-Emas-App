@@ -30,6 +30,7 @@ class TransactionsImpRepository(private val transactionDao: TransactionDao):Tran
     override suspend fun updateSaving(item: SavingTable) =
         transactionDao.updateSaving(item)
 
+    override suspend fun deleteSaving(item: SavingTable)=transactionDao.deleteSaving(item)
 
     override fun getAllSaving(): Flow<List<SavingTable>> = transactionDao.getAllSaving()
 

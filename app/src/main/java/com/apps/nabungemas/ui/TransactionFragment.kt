@@ -14,6 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -213,6 +214,7 @@ fun TransactionItem(
                 Icon(
                     modifier = modifier,
                     painter = painterResource(id = R.drawable.ic_delete),
+                    tint = colorResource(id = R.color.grey_500),
                     contentDescription = ""
                 )
             }
@@ -231,35 +233,9 @@ fun TransactionItem(
 
 }
 
-@Composable
-fun DeletedConfirmationAlert(modifier: Modifier,
-    onCorfirm:(Boolean)->Unit
-) {
-    AlertDialog(onDismissRequest = { /*TODO*/ },
-        title = {Text(text = "Delete Item", style = MaterialTheme.typography.h6)},
-        text = {Text(text = "Do you want to deleted?")},
-        backgroundColor = MaterialTheme.colors.background,
-        dismissButton = {
-            TextButton(onClick = { onCorfirm(false) }) {
-                Text(text = "No")
 
-            }
-        },
-    confirmButton = {
-        TextButton(onClick = { onCorfirm(true) }) {
-            Text(text = "Yes")
-            
-        }
-    })
-}
 
-@Preview(showBackground = true)
-@Composable
-fun DialogPreview() {
-    MyApplicationTheme(darkTheme = false) {
-        DeletedConfirmationAlert(modifier = Modifier, onCorfirm = {})
-    }
-}
+
 
 @Preview(showBackground = true)
 @Composable

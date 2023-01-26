@@ -19,6 +19,8 @@ interface TransactionsRepository {
 
     suspend fun updateSaving(item: SavingTable)
 
+    suspend fun deleteSaving(item: SavingTable)
+
     fun getAllSaving(): Flow<List<SavingTable>>
 
     suspend fun getSaving(categorySaving:String):Long?

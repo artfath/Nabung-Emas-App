@@ -73,7 +73,6 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
 
 
     fun addNewTransaction() {
-//        val newTransaction = getNewTransaction(category, date, price, quantity, product)
         insertTransaction(addTransactionUiState.transactionDetails.getNewTransaction())
         viewModelScope.launch {
             try {
@@ -315,6 +314,12 @@ class TransactionViewModel(private val repository: TransactionsRepository) : Vie
     private fun insertSaving(saving: SavingTable) {
         viewModelScope.launch {
             repository.insertSaving(saving)
+        }
+    }
+
+    fun deleteSaving(saving: SavingTable) {
+        viewModelScope.launch {
+            repository.deleteSaving(saving)
         }
     }
 

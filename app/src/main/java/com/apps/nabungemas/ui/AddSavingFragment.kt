@@ -4,24 +4,18 @@ import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
-import com.apps.nabungemas.data.SavingTable
-import com.apps.nabungemas.data.TransactionTable
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 import com.apps.nabungemas.viewmodel.SavingDetails
 import com.apps.nabungemas.viewmodel.SavingUiState
@@ -104,7 +98,7 @@ viewModel: TransactionViewModel=viewModel(factory=AppViewModelProvider.Factory))
                 version = 0,
                 navigateUp = onNavigateUp)
         },
-        backgroundColor = Color(0xFFFFFDF5)
+        backgroundColor = MaterialTheme.colors.background
     )
     { innerPadding ->
         AddSavingBody(
@@ -147,6 +141,7 @@ fun AddSavingBody(
                 value = savingUiState.savingDetails.savingCategory,
                 onValueChange = {  },
                 label = { Text(text = stringResource(id = R.string.category_saving)) },
+                textStyle = MaterialTheme.typography.body1,
                 colors = TextFieldDefaults.textFieldColors(
                     backgroundColor = Color.White),
                 trailingIcon = {
@@ -177,10 +172,6 @@ fun AddSavingBody(
 
         }
 
-//        Row(
-//            modifier = modifier.padding(top = 16.dp),
-//            verticalAlignment = Alignment.CenterVertically
-//        ) {
             OutlinedTextField(modifier = modifier
                 .padding(top = 16.dp)
                 .fillMaxWidth(),
@@ -188,6 +179,7 @@ fun AddSavingBody(
                     backgroundColor = Color.White),
                 value = savingUiState.savingDetails.target,
                 label = { Text(text = stringResource(id = R.string.target_tabungan)) },
+                textStyle = MaterialTheme.typography.body1,
                 leadingIcon = {
                     Text(
                         text = stringResource(id = R.string.rupiah),
@@ -197,18 +189,6 @@ fun AddSavingBody(
                 },
                 onValueChange = {
                     onValueChange(savingUiState.savingDetails.copy(target = it)) })
-//            Box(
-//                modifier = modifier.size(56.dp),
-//                contentAlignment = Alignment.Center,
-//            ) {
-//                Text(
-//                    textAlign = TextAlign.Center, modifier = modifier.padding(4.dp),
-//                    text = stringResource(id = R.string.rupiah),
-//                    style = MaterialTheme.typography.h6
-//                )
-//            }
-//
-//        }
 
 
         Row(
@@ -221,10 +201,10 @@ fun AddSavingBody(
                     .weight(1f)
                     .height(56.dp),
                 onClick =  onCancelClick ,
-                border = BorderStroke(2.dp, colorResource(id = R.color.yellow_500)),
+                border = BorderStroke(2.dp, MaterialTheme.colors.primary),
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    contentColor = colorResource(id = R.color.yellow_500),
+                    contentColor = MaterialTheme.colors.primary,
                     backgroundColor = Color.White
                 )
             ) {
@@ -245,7 +225,7 @@ fun AddSavingBody(
                 enabled = savingUiState.isEntryValid,
                 shape = RoundedCornerShape(10.dp),
                 colors = ButtonDefaults.buttonColors(
-                    backgroundColor = colorResource(id = R.color.yellow_500),
+                    backgroundColor = MaterialTheme.colors.primary,
                     contentColor = Color.White)
             ) {
                 Icon(
