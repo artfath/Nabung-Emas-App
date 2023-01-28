@@ -2,13 +2,19 @@ package com.apps.nabungemas.viewmodel
 
 import android.app.Application
 import android.util.Log
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import androidx.work.*
 import com.apps.nabungemas.data.GoldCurrencyTable
+import com.apps.nabungemas.data.TransactionDao
 import com.apps.nabungemas.model.Currencies
 import com.apps.nabungemas.model.GoldPrice
+import com.apps.nabungemas.model.GoldUpdatePrice
 import com.apps.nabungemas.network.ApiStatus
 import com.apps.nabungemas.network.GoldApi
+import com.apps.nabungemas.repository.GoldRepository
 import com.apps.nabungemas.repository.TransactionsRepository
 import com.apps.nabungemas.worker.InternetWorker
 import com.apps.nabungemas.worker.WorkerConstant
@@ -21,7 +27,7 @@ import java.util.concurrent.TimeUnit
 
 
 class GoldViewModel(
-//    private val transactionDao: TransactionDao,
+   private val goldRepository: GoldRepository,
     private val repository: TransactionsRepository,
     application: Application
 ) : ViewModel() {
@@ -56,9 +62,12 @@ class GoldViewModel(
 
     val percentageState: Flow<Double?> = repository.getPercentage()
 
+    var goldUiState:GoldUiState by mutableStateOf(GoldUiState.Loading)
+        private set
+
     init {
         getGoldandCurrency()
-//        getGoldPrice()
+        getGoldList()
 //        getCurrency()
     }
 
@@ -85,16 +94,7 @@ class GoldViewModel(
         }
     }
 
-//    private fun updateGodCurrency() {
-//        val currency = _currency.value?.exchangeRates?.idr
-//        Log.d("currency", currency.toString())
-//        val prevPrice = _gold.value?.prevPrice
-//        val prevDifferent = _gold.value?.priceDifferent
-//        val price = _gold.value?.priceGram24k
-//        val data = getNewGold(currency!!,prevPrice!!,prevDifferent!!,price!!)
-//        Log.d("data insert", data.toString())
-//        insertGoldCurrency(data)
-//    }
+
 
     internal fun getGoldandCurrency() {
         val constraint = Constraints.Builder()
@@ -141,55 +141,24 @@ class GoldViewModel(
             }
         }
     }
-
-//    fun convertPrice(): Double? {
-//        val idr = _currency.value?.exchangeRates?.idr
-//        val priceGram = _gold.value?.priceGram24k
-//        return priceGram?.times(idr!!)
-//    }
-
-    fun getPercentage(
-        savingTotal: Double?,
-        targetTotal: Double?
-    ) {
-//         val savingTotal : LiveData<Long>
-//        val targetTotal :LiveData<Long>
-        var result: Double?
+    fun getGoldList() {
         viewModelScope.launch {
+            goldUiState = GoldUiState.Loading
             try {
-//            savingTotal = transtionDao.getTotalSaving().asLiveData()
-//            targetTotal = transtionDao.getTotalTarget().asLiveData()
-//            val target =targetTotal.value
-//            val saving = savingTotal.value
-                if (savingTotal == 0.0 || targetTotal == 0.0) {
-//                    _percentage.value = 0.0
-                    _percentState.value = "0 %"
-                    Log.d("data", _percentage.value.toString())
-                } else {
-//                    _percentage.value = savingTotal?.div(targetTotal!!)?.times(100)
-                     val doublePercent = savingTotal?.div(targetTotal!!)?.times(100)!!
-                    _percentState.value = String.format("%.2f %", doublePercent)
-                }
-
+                val result = goldRepository.getPrice()
+                goldUiState = GoldUiState.Success(result)
             } catch (e: Exception) {
-//                _percentage.value = 0.0
-                _percentState.value = "0 %"
+                goldUiState = GoldUiState.Error
             }
         }
     }
 
-//    companion object {
-//        val Factory: ViewModelProvider.Factory = viewModelFactory {
-//            initializer {
-////                val transactionDao = (this[APPLICATION_KEY] as DataApplication).database.transactionDao()
-//                val application = this[APPLICATION_KEY] as DataApplication
-//                GoldViewModel(
-//                    repository = DataApplication().container.transactionsRepository,
-//                    application = application
-//                )
-//            }
-//        }
-//    }
+}
+
+sealed interface GoldUiState {
+    data class Success(val goldData:GoldUpdatePrice.GoldResponse) : GoldUiState
+    object Error : GoldUiState
+    object Loading : GoldUiState
 }
 
 

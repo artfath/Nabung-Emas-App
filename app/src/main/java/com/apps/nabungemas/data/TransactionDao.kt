@@ -14,7 +14,7 @@ interface TransactionDao {
     @Delete
     suspend fun deleteTransactions(item: TransactionTable)
 
-    @Query("SELECT * FROM `transaction` ORDER BY time ASC")
+    @Query("SELECT * FROM `transaction` ORDER BY category ASC")
     fun getTransactions(): Flow<List<TransactionTable>>
 
     @Query("SELECT * FROM `transaction` WHERE id = :id")

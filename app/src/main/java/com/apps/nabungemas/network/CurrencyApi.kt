@@ -6,15 +6,15 @@ import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
 
 object CurrencyApi {
-    private val BASE_URL = "https://exchange-rates.abstractapi.com/v1/"
-    private val moshi= Moshi.Builder()
+    private val BASE_URL_CURRENCY = "https://v6.exchangerate-api.com/"
+    private val moshi=Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
-    private val retrofit = Retrofit.Builder()
+    private val retrofitCurrency = Retrofit.Builder()
         .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .baseUrl(BASE_URL)
+        .baseUrl(BASE_URL_CURRENCY)
         .build()
-    val retrofitService: CurrencyApiService by lazy {
-        retrofit.create(CurrencyApiService::class.java)
+    val retrofitServiceCurrency: CurrencyApiService by lazy {
+        retrofitCurrency.create(CurrencyApiService::class.java)
     }
 }

@@ -23,6 +23,7 @@ import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
 import com.apps.nabungemas.data.SavingTable
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
+import com.apps.nabungemas.utils.CurrencyAmount.currencyId
 import com.apps.nabungemas.viewmodel.TransactionViewModel
 
 
@@ -103,7 +104,7 @@ import com.apps.nabungemas.viewmodel.TransactionViewModel
 fun SavingScreen(navigateToAddSaving:()->Unit,
 viewModel: TransactionViewModel=viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val listSaving by viewModel.allSavingState.collectAsState(initial = null)
+    val listSaving by viewModel.allSavingState.collectAsState(initial = listOf())
     Scaffold(
         topBar = {
             MainTopAppBar(
@@ -210,13 +211,14 @@ fun SavingItem(modifier: Modifier,
                     Column(modifier = modifier.weight(1f)) {
                         Text(
                             modifier = modifier,
-                            text = stringResource(id = R.string.target,saving.target.toString()),
+                            text = stringResource(id = R.string.target,
+                                currencyId( saving.target.toString())),
                             style = MaterialTheme.typography.body1
                         )
                         Text(
                             modifier = modifier,
                             text = stringResource(id = R.string.total_saving,
-                                saving.totalSaving.toString()),
+                                currencyId(saving.totalSaving.toString())),
                             style = MaterialTheme.typography.body1
                         )
                     }

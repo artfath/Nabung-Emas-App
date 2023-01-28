@@ -16,6 +16,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -23,6 +24,7 @@ import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
 import com.apps.nabungemas.data.TransactionTable
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
+import com.apps.nabungemas.utils.CurrencyAmount.currencyId
 import com.apps.nabungemas.viewmodel.TransactionViewModel
 
 
@@ -187,7 +189,7 @@ fun TransactionItem(
                     Spacer(modifier = modifier.weight(1f))
                     Text(
                         modifier = modifier,
-                        text = transaction.goldPrice.toString(),
+                        text = currencyId(transaction.goldPrice.toString()),
                         style = MaterialTheme.typography.body1
                     )
                 }
@@ -196,14 +198,14 @@ fun TransactionItem(
                         modifier = modifier,
                         text = transaction.product,
                         style = MaterialTheme.typography.body1,
-                        color = Color(0xFFc8a600)
+                        color = colorResource(id = R.color.yellow_700)
                     )
                     Spacer(modifier = modifier.weight(1f))
                     Text(
                         modifier = modifier,
-                        text = transaction.goldQuantity.toString(),
+                        text = stringResource(id = R.string.gold_weight,transaction.goldQuantity.toString()),
                         style = MaterialTheme.typography.body2,
-                        color = Color(0xFF0081cb)
+                        color = colorResource(id = R.color.blue_700)
                     )
                 }
             }

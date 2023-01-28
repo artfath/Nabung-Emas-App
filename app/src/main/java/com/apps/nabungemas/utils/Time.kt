@@ -1,8 +1,10 @@
 package com.apps.nabungemas.utils
 
 import android.os.Build
+import java.text.SimpleDateFormat
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
+import java.util.*
 
 object Time {
     fun getTime(): String? {
@@ -16,5 +18,12 @@ object Time {
         } else {
             return null
         }
+    }
+
+    fun timestampDate(date:Long?):String{
+        val inputFormatter = SimpleDateFormat("dd MMM yyyy, HH:mm", Locale.getDefault())
+        inputFormatter.timeZone = TimeZone.getTimeZone("GMT")
+        val dateNow = Date(date!!)
+        return inputFormatter.format(dateNow)
     }
 }

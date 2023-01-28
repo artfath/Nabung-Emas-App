@@ -26,6 +26,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apps.nabungemas.R
 import com.apps.nabungemas.data.GoldCurrencyTable
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
+import com.apps.nabungemas.utils.CurrencyAmount.currencyId
 import com.apps.nabungemas.utils.Time.getTime
 import com.apps.nabungemas.viewmodel.GoldViewModel
 
@@ -169,7 +170,6 @@ fun HomeScreen(
 ) {
     val target by viewModel.allTargetState.collectAsState(initial = 0)
     val saving by viewModel.allSavingState.collectAsState(initial = 0)
-    viewModel.getPercentage(saving?.toDouble(), target?.toDouble())
     val percentage by viewModel.percentageState.collectAsState(initial = 0.0)
     val listHeader = listOf(target.toString(),
         saving.toString(),
@@ -230,7 +230,6 @@ fun HomeBody(
 }
 
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Header(
     modifier: Modifier,
@@ -285,22 +284,16 @@ percentage:Double?
                     )
                     Text(
                         modifier = modifier.padding(top = 8.dp),
-                        text = stringResource(id = R.string.total_target, list[0]),
+                        text = stringResource(id = R.string.total_target, currencyId( list[0])),
                         style = MaterialTheme.typography.body2,
                         color = Color.Black
                     )
                     Text(
                         modifier = modifier.padding(top = 8.dp),
-                        text = stringResource(id = R.string.total_saving, list[1]),
+                        text = stringResource(id = R.string.total_saving, currencyId( list[1])),
                         style = MaterialTheme.typography.body2,
                         color = Color.Black
                     )
-//                    Text(
-//                        modifier = modifier.padding(top = 8.dp),
-//                        text = getTime() ?: "",
-//                        style = MaterialTheme.typography.caption,
-//                        color = Color.Black
-//                    )
                     Row(modifier = modifier
                         .fillMaxWidth()
                         .padding(top = 8.dp),
@@ -378,7 +371,8 @@ fun GoldCard(modifier: Modifier,
                     modifier = modifier.padding(top = 8.dp),
                     text = stringResource(
                         id = R.string.price_pergram,
-                        goldCurrency?.priceGram24k ?: 0.0
+                        currencyId(goldCurrency?.priceGram24k.toString())
+
                     ),
                     style = MaterialTheme.typography.body1,
                     color = Color.Black
@@ -388,7 +382,8 @@ fun GoldCard(modifier: Modifier,
                     modifier = modifier.padding(top = 8.dp),
                     text = stringResource(
                         id = R.string.price_previous,
-                        goldCurrency?.prevPrice ?: 0.0
+                        currencyId(
+                        goldCurrency?.prevPrice.toString())
                     ),
                     style = MaterialTheme.typography.caption,
                     color = Color.Black
@@ -413,10 +408,7 @@ fun GoldCard(modifier: Modifier,
                     }
                     Text(
                         modifier = Modifier.padding(start = 4.dp),
-                        text = stringResource(
-                            id = R.string.price_double,
-                            goldDifferent
-                        ),
+                        text = currencyId(goldDifferent.toString()),
                         style = MaterialTheme.typography.caption,
                         color = Color.Black
 
@@ -475,9 +467,7 @@ fun CurrencyCard(
                 )
                 Text(
                     modifier = Modifier.padding(top = 8.dp),
-                    text = stringResource(
-                        id = R.string.price_double,
-                        currency ?: 0.0),
+                    text = currencyId(currency.toString()),
                     style = MaterialTheme.typography.body1,
                     color = Color.Black
                 )

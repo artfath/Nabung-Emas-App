@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.apps.nabungemas.DataApplication
 import com.apps.nabungemas.data.GoldCurrencyTable
+import com.apps.nabungemas.network.CurrencyApi
 import com.apps.nabungemas.network.GoldApi
 import com.apps.nabungemas.worker.WorkerConstant.TROY_OUNCE_GRAM
 import kotlinx.coroutines.Dispatchers
@@ -22,7 +23,7 @@ class InternetWorker(context: Context,params:WorkerParameters):CoroutineWorker(c
         try {
             notification.statusNotification("Retrieve Data",applicationContext)
             val apiOne = async {GoldApi.retrofitService.getPrice("XAU", "goldapi-1c4t5418l1ygu500-io") }
-            val apiTwo = async {GoldApi.retrofitServiceCurrency
+            val apiTwo = async {CurrencyApi.retrofitServiceCurrency
                 .getCurrency("5afbc90a5f98e5091bcbe417", "USD", "IDR") }
 //            if(apiOne.isCompleted && apiTwo.isCompleted){
                 apiOne.await().let {

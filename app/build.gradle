@@ -112,6 +112,8 @@ dependencies {
     implementation "io.github.vanpra.compose-material-dialogs:datetime:0.9.0"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.0'
 
+    implementation 'com.github.jaikeerthick:Composable-Graphs:v1.0'
+
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_ui_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_ui_version"

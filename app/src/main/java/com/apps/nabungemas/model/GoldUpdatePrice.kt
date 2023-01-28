@@ -14,7 +14,7 @@ data class GoldUpdatePrice(
     val lastPrice: String?,
 
     @Json(name = "change_gold")
-    val change: String?,
+    val change: Long?,
 
     @Json(name = "timestamp")
     val time: Long

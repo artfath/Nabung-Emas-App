@@ -6,7 +6,7 @@
     <string name="transaction">Transaction</string>
     <string name="saving">Saving</string>
     <string name="about">About</string>
-    <string name="about_statement">Aplikasi ini adalah aplikasi sederhana yang membantu untuk menabung emas.</string>
+    <string name="about_statement">Aplikasi ini adalah aplikasi sederhana yang membantu pencatatan pada tabungan emas.</string>
     <string name="emas">Emas Dunia</string>
     <string name="transaksi">Transaksi</string>
     <string name="tabungan">Tabungan</string>
@@ -28,8 +28,8 @@
     <string name="percentage">%1$.2f %%</string>
     <string name="price">Rp. %s</string>
     <string name="gold_weight">%s gr</string>
-    <string name="price_pergram">Harga perGram Rp. %1$.2f</string>
-    <string name="price_previous">Harga Terakhir Rp. %1$.2f</string>
+    <string name="price_pergram">Harga perGram %s</string>
+    <string name="price_previous">Harga Terakhir %s</string>
     <string name="price_double">Rp. %1$.2f</string>
     <string name="summary">Ringkasan</string>
     <string name="target_tabungan">Target *</string>
@@ -40,6 +40,8 @@
     <string name="referensi_hari_ini">Referensi hari Ini</string>
     <string name="grams">gram</string>
     <string name="graph">Graph</string>
+    <string name="version">Version %s</string>
+    <string name="copyright">"© 2023 NabungEmas"</string>
     <string-array name="category_saving">
         <item>Tabungan Menikah</item>
         <item>Tabungan Rumah</item>

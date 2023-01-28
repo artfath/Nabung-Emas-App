@@ -14,7 +14,8 @@ object AppViewModelProvider {
         initializer {
             GoldViewModel(
                 repository = dataApplication().container.transactionsRepository,
-                dataApplication()
+                goldRepository = dataApplication().container.goldRepository,
+                application = dataApplication()
             )
         }
         initializer {
