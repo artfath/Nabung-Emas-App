@@ -13,8 +13,11 @@ fun NavigationGraph(
     modifier: Modifier = Modifier
 ) {
     NavHost(navController = navController,
-        startDestination = NavItem.Home.route,
+        startDestination = NavItem.Splash.route,
         modifier = modifier){
+        composable(route = NavItem.Splash.route){
+            SplashScreen(navController = navController)
+        }
         composable(route = NavItem.Home.route){
             HomeScreen(navigateToAddTransaction = {navController.navigate(NavItem.AddTransaction.route)})
         }

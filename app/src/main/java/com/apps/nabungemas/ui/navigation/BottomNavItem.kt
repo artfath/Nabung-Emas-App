@@ -3,6 +3,7 @@ package com.apps.nabungemas.ui.navigation
 import com.apps.nabungemas.R
 
 sealed class NavItem(val icon:Int, val route:String,val title:Int){
+    object Splash:NavItem(icon = 0, route = "splash", title = 0)
     object Home:NavItem(icon = R.drawable.ic_home, route = "home", title = R.string.home)
     object Transaction:NavItem(icon = R.drawable.ic_transaction, route = "transaction", title = R.string.transaction)
     object Graph:NavItem(icon = R.drawable.ic_chart, route = "graph", title = R.string.graph)

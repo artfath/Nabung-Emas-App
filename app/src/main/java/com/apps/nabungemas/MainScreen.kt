@@ -13,8 +13,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -25,6 +24,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.apps.nabungemas.ui.SplashScreen
 import com.apps.nabungemas.ui.navigation.BottomNav
 import com.apps.nabungemas.ui.navigation.NavItem
 import com.apps.nabungemas.ui.navigation.NavigationGraph
@@ -41,8 +41,10 @@ fun MainScreen() {
             }
     )
     { innerPadding ->
-        NavigationGraph(modifier = Modifier.padding(innerPadding), navController = navController)
-
+            NavigationGraph(
+                modifier = Modifier.padding(innerPadding),
+                navController = navController
+            )
     }
 }
 
@@ -51,6 +53,7 @@ fun currentRoute(navController: NavHostController): Boolean {
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val route = navBackStackEntry?.destination?.route
     return when(route){
+        NavItem.Splash.route ->false
         NavItem.AddTransaction.route -> false
         NavItem.AddSaving.route -> false
         else->true
@@ -100,13 +103,7 @@ fun MainTopAppBar(
                         tint = Color.White
                     )
                 }
-//                IconButton(onClick = navigateDelete) {
-//                    Icon(
-//                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_delete),
-//                        contentDescription = "",
-//                        tint = Color.White
-//                    )
-//                }
+//
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color(0xFFffd740))
