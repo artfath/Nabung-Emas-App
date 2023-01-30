@@ -9,7 +9,6 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 
 object GoldApi {
     private val BASE_URL = "https://www.goldapi.io/api/"
-    private val BASE_URL_CURRENCY = "https://v6.exchangerate-api.com/"
     private val moshi=Moshi.Builder()
         .add(KotlinJsonAdapterFactory())
         .build()
@@ -17,14 +16,7 @@ object GoldApi {
         .addConverterFactory(MoshiConverterFactory.create(moshi))
         .baseUrl(BASE_URL)
         .build()
-    private val retrofitCurrency = Retrofit.Builder()
-        .addConverterFactory(MoshiConverterFactory.create(moshi))
-        .baseUrl(BASE_URL_CURRENCY)
-        .build()
     val retrofitService: GoldApiService by lazy {
         retrofit.create(GoldApiService::class.java)
-    }
-    val retrofitServiceCurrency: CurrencyApiService by lazy {
-        retrofitCurrency.create(CurrencyApiService::class.java)
     }
 }

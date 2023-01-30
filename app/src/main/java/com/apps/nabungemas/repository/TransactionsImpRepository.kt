@@ -1,9 +1,30 @@
 package com.apps.nabungemas.repository
 
+import android.content.Context
+import androidx.work.*
 import com.apps.nabungemas.data.*
+import com.apps.nabungemas.worker.InternetWorker
+import com.apps.nabungemas.worker.WorkerConstant
 import kotlinx.coroutines.flow.Flow
+import java.util.concurrent.TimeUnit
 
-class TransactionsImpRepository(private val transactionDao: TransactionDao):TransactionsRepository {
+class TransactionsImpRepository(context: Context,private val transactionDao: TransactionDao):TransactionsRepository {
+    private val workManager = WorkManager.getInstance(context)
+    override fun getGoldCurrencyOnline() {
+        val constraint = Constraints.Builder()
+            .setRequiredNetworkType(NetworkType.CONNECTED)
+            .build()
+
+        val work = PeriodicWorkRequestBuilder<InternetWorker>(24, TimeUnit.HOURS)
+            .setConstraints(constraint)
+            .build()
+
+        workManager.enqueueUniquePeriodicWork(
+            WorkerConstant.NOTIFICATION_CHANNEL_NAME,
+            ExistingPeriodicWorkPolicy.KEEP,
+            work
+        )
+    }
     override suspend fun insertTransactions(item: TransactionTable) =
         transactionDao.insertTransactions(item)
 
@@ -62,6 +83,8 @@ class TransactionsImpRepository(private val transactionDao: TransactionDao):Tran
 
 
     override fun getGoldCurrency(): Flow<GoldCurrencyTable> = transactionDao.getGoldCurrency()
+
+    override fun getGoldWeek(): Flow<List<GoldCurrencyTable>> = transactionDao.getGoldWeek()
 
 
 }

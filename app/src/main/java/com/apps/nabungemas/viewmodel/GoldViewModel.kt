@@ -1,14 +1,17 @@
 package com.apps.nabungemas.viewmodel
 
 import android.app.Application
+import android.content.ClipData
 import android.util.Log
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.*
 import androidx.work.*
 import com.apps.nabungemas.data.GoldCurrencyTable
 import com.apps.nabungemas.data.TransactionDao
+import com.apps.nabungemas.data.TransactionTable
 import com.apps.nabungemas.model.Currencies
 import com.apps.nabungemas.model.GoldPrice
 import com.apps.nabungemas.model.GoldUpdatePrice
@@ -18,21 +21,15 @@ import com.apps.nabungemas.repository.GoldRepository
 import com.apps.nabungemas.repository.TransactionsRepository
 import com.apps.nabungemas.worker.InternetWorker
 import com.apps.nabungemas.worker.WorkerConstant
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 
 class GoldViewModel(
-   private val goldRepository: GoldRepository,
-    private val repository: TransactionsRepository,
-    application: Application
+    private val goldRepository: GoldRepository,
+    private val repository: TransactionsRepository
 ) : ViewModel() {
-
-    private val workerManager = WorkManager.getInstance(application)
 
     private val _status = MutableLiveData<ApiStatus>()
     val status: LiveData<ApiStatus> = _status
@@ -62,13 +59,51 @@ class GoldViewModel(
 
     val percentageState: Flow<Double?> = repository.getPercentage()
 
-    var goldUiState:GoldUiState by mutableStateOf(GoldUiState.Loading)
+    var goldUiState: GoldUiState by mutableStateOf(GoldUiState.Loading)
         private set
+
+    val golPriceState: Flow<List<GoldCurrencyTable>> = repository.getGoldWeek()
+
+    private val _itemGoldPrice = mutableStateListOf<Double>(0.0,0.0,0.0,0.0,0.0,0.0,0.0)
+    val itemGoldPrice: List<Double> = _itemGoldPrice
+    private val _itemGoldDate = mutableStateListOf<String>("","","","","","","")
+    val itemGoldDate: List<String> = _itemGoldDate
 
     init {
         getGoldandCurrency()
         getGoldList()
+        listdata()
 //        getCurrency()
+    }
+
+    fun listdata() {
+        viewModelScope.launch {
+            repository.getGoldWeek().collect { list ->
+                if(list.size == 1){
+                    _itemGoldPrice.clear()
+                    _itemGoldDate.clear()
+                    _itemGoldPrice.add(0.0)
+                    _itemGoldDate.add("")
+                    list.forEachIndexed { index, item ->
+                        _itemGoldPrice.add(item.priceGram24k!!)
+                        _itemGoldDate.add(item.dateGold?.substring(0, 5).toString())
+                    }
+                }else{
+                    _itemGoldPrice.clear()
+                    _itemGoldDate.clear()
+                    list.forEachIndexed { index, item ->
+                        _itemGoldPrice.add(index, item.priceGram24k!!)
+                        _itemGoldDate.add(index, item.dateGold?.substring(0, 5).toString())
+                    }
+                }
+
+
+
+                Log.e("graphlist", list.toString())
+
+
+            }
+        }
     }
 
     private fun getGoldCurrency() {
@@ -76,40 +111,41 @@ class GoldViewModel(
             try {
                 val result = repository.findGoldCurrency()
                 Log.d("findGold", result.toString())
-                if(result == null){
+                if (result == null) {
 //                    getCurrency()
                     getGoldPrice()
 //                    updateGodCurrency()
                 }
-            }catch (e:Exception){
+            } catch (e: Exception) {
 //                updateGodCurrency()
             }
 
         }
 
     }
-    private fun insertGoldCurrency(item:GoldCurrencyTable){
+
+    private fun insertGoldCurrency(item: GoldCurrencyTable) {
         viewModelScope.launch {
             repository.insertGoldCurrency(item)
         }
     }
 
 
-
     internal fun getGoldandCurrency() {
-        val constraint = Constraints.Builder()
-            .setRequiredNetworkType(NetworkType.CONNECTED)
-            .build()
-
-        val work = PeriodicWorkRequestBuilder<InternetWorker>(24, TimeUnit.HOURS)
-            .setConstraints(constraint)
-            .build()
-
-        workerManager.enqueueUniquePeriodicWork(
-                WorkerConstant.NOTIFICATION_CHANNEL_NAME,
-                ExistingPeriodicWorkPolicy.REPLACE,
-                work
-            )
+        repository.getGoldCurrencyOnline()
+//        val constraint = Constraints.Builder()
+//            .setRequiredNetworkType(NetworkType.CONNECTED)
+//            .build()
+//
+//        val work = PeriodicWorkRequestBuilder<InternetWorker>(24, TimeUnit.HOURS)
+//            .setConstraints(constraint)
+//            .build()
+//
+//        workerManager.enqueueUniquePeriodicWork(
+//                WorkerConstant.NOTIFICATION_CHANNEL_NAME,
+//                ExistingPeriodicWorkPolicy.REPLACE,
+//                work
+//            )
     }
 
 
@@ -141,6 +177,7 @@ class GoldViewModel(
             }
         }
     }
+
     fun getGoldList() {
         viewModelScope.launch {
             goldUiState = GoldUiState.Loading
@@ -153,10 +190,11 @@ class GoldViewModel(
         }
     }
 
+
 }
 
 sealed interface GoldUiState {
-    data class Success(val goldData:GoldUpdatePrice.GoldResponse) : GoldUiState
+    data class Success(val goldData: GoldUpdatePrice.GoldResponse) : GoldUiState
     object Error : GoldUiState
     object Loading : GoldUiState
 }

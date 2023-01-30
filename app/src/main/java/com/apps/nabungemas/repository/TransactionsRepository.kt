@@ -40,4 +40,6 @@ interface TransactionsRepository {
     suspend fun insertGoldCurrency(item: GoldCurrencyTable)
 
     fun getGoldCurrency(): Flow<GoldCurrencyTable>
+    fun getGoldWeek(): Flow<List<GoldCurrencyTable>>
+    fun getGoldCurrencyOnline()
 }

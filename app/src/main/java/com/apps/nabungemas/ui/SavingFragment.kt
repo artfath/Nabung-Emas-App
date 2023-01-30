@@ -132,7 +132,11 @@ fun SavingBody(modifier: Modifier,
 ) {
     Column() {
         if (itemList.isNullOrEmpty()) {
-            Text(text = "No data")
+            Box(modifier = modifier.fillMaxSize()
+                .background(color = Color.White),
+                contentAlignment = Alignment.Center) {
+                Text(text = "No Data", style = MaterialTheme.typography.h6)
+            }
         } else {
             SavingList(modifier = modifier,itemList, onDeletedItem = onDeletedItem)
         }

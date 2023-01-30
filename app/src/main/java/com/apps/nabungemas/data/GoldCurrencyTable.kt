@@ -9,15 +9,15 @@ data class GoldCurrencyTable(
     @PrimaryKey(autoGenerate = true)
     val id:Int=0,
     @ColumnInfo(name = "currency")
-    val currency: Double,
+    val currency: Double?,
     @ColumnInfo(name = "prev_price")
-    val prevPrice: Double,
+    val prevPrice: Double?,
     @ColumnInfo(name = "price_difference")
-    val priceDifferent: Double,
+    val priceDifferent: Double?,
     @ColumnInfo(name = "price_gram")
-    val priceGram24k: Double,
+    val priceGram24k: Double?,
     @ColumnInfo(name = "date_gold")
-    val dateGold: String,
+    val dateGold: String?,
     @ColumnInfo(name = "date_currency")
-    val dateCurrency: String
+    val dateCurrency: String?
 )

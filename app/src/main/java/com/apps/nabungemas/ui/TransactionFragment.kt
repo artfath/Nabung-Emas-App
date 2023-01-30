@@ -126,7 +126,11 @@ fun TransactionBody(
 ) {
     Column(modifier = modifier.fillMaxHeight()) {
         if (itemList.isNullOrEmpty()) {
-            Text(text = "No data")
+            Box(modifier = modifier.fillMaxSize()
+                .background(color = Color.White),
+                contentAlignment = Alignment.Center) {
+                Text(text = "No Data", style = MaterialTheme.typography.h6)
+            }
         } else {
             TransactionList(modifier = modifier,
                 itemList = itemList,

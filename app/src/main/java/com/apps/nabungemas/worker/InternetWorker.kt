@@ -6,6 +6,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.apps.nabungemas.DataApplication
 import com.apps.nabungemas.data.GoldCurrencyTable
+import com.apps.nabungemas.data.TransactionRoomDatabase
 import com.apps.nabungemas.network.CurrencyApi
 import com.apps.nabungemas.network.GoldApi
 import com.apps.nabungemas.worker.WorkerConstant.TROY_OUNCE_GRAM
@@ -16,15 +17,17 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class InternetWorker(context: Context,params:WorkerParameters):CoroutineWorker(context,params) {
-    override suspend fun doWork(): Result = withContext(Dispatchers.IO) {
+    override suspend fun doWork(): Result {
         val notification = WorkerUtils()
         val database = DataApplication().database
+        return withContext(Dispatchers.IO) {
 
-        try {
-            notification.statusNotification("Retrieve Data",applicationContext)
-            val apiOne = async {GoldApi.retrofitService.getPrice("XAU", "goldapi-1c4t5418l1ygu500-io") }
-            val apiTwo = async {CurrencyApi.retrofitServiceCurrency
-                .getCurrency("5afbc90a5f98e5091bcbe417", "USD", "IDR") }
+
+            try {
+                notification.statusNotification("Retrieve Data",applicationContext)
+                val apiOne = async {GoldApi.retrofitService.getPrice("XAU", "goldapi-1c4t5418l1ygu500-io") }
+                val apiTwo = async {CurrencyApi.retrofitServiceCurrency
+                    .getCurrency("5afbc90a5f98e5091bcbe417", "USD", "IDR") }
 //            if(apiOne.isCompleted && apiTwo.isCompleted){
                 apiOne.await().let {
 
@@ -54,16 +57,19 @@ class InternetWorker(context: Context,params:WorkerParameters):CoroutineWorker(c
 
 
 //            Log.d("result",result.toString())
-            notification.statusNotification("Success",applicationContext)
+                notification.statusNotification("Success",applicationContext)
 
-            Result.success()
-        }catch (e:Exception){
-            notification.statusNotification("Failure",applicationContext)
-            Result.failure()
+                Result.success()
+            }catch (e:Exception){
+                notification.statusNotification("Failure",applicationContext)
+                Result.failure()
+            }
+
+
         }
-
-
     }
+
+
 
     private fun getdate(time:Long):String{
         val dateFormat = SimpleDateFormat("dd MMM yyyy, HH:mm:ss", Locale.getDefault())

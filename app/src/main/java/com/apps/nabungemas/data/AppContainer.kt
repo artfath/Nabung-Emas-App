@@ -13,9 +13,9 @@ interface AppContainer {
     val goldRepository:GoldRepository
 }
 
-class DefaultAppContainer(private val contex: Context) : AppContainer {
+class DefaultAppContainer(private val context: Context) : AppContainer {
     override val transactionsRepository: TransactionsRepository by lazy {
-        TransactionsImpRepository(TransactionRoomDatabase.getDatabase(contex).transactionDao())
+        TransactionsImpRepository(context = context,TransactionRoomDatabase.getDatabase(context).transactionDao())
     }
     override val goldRepository: GoldRepository by lazy{
         GoldNetworkImpRepository(GoldPriceApi.retrofitService)

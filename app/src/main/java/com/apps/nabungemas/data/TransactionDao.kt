@@ -63,4 +63,7 @@ interface TransactionDao {
 
     @Query("SELECT * FROM `gold_currency` ORDER BY id DESC")
     fun getGoldCurrency(): Flow<GoldCurrencyTable>
+
+    @Query("SELECT * FROM `gold_currency` GROUP BY date_currency LIMIT 7")
+    fun getGoldWeek(): Flow<List<GoldCurrencyTable>>
 }

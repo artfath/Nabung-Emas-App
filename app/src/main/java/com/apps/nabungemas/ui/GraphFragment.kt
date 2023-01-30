@@ -1,6 +1,7 @@
 package com.apps.nabungemas.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,10 +12,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.material.SnackbarDefaults.backgroundColor
+import androidx.compose.runtime.*
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -22,6 +21,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -30,6 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
@@ -81,6 +82,35 @@ import com.jaikeerthick.composable_graphs.style.LinearGraphVisibility
 fun GraphScreen(
     viewModel: GoldViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val goldPrice by viewModel.golPriceState.collectAsStateWithLifecycle(null)
+    val listData = remember { viewModel.itemGoldPrice }
+    val listDate = remember {
+        viewModel.itemGoldDate
+    }
+//    val listData = remember { mutableStateListOf(0.0) }
+//    val listDate = remember {
+//        mutableStateListOf("start")
+//    }
+//
+//    if (goldPrice.isNullOrEmpty()) {
+//        listData.add(0.0)
+//        listDate.add("last")
+//    } else if(goldPrice?.size!! == 1) {
+//        goldPrice?.forEach { item ->
+//            listData.add(item.priceGram24k ?: 0.0)
+//            listDate.add(item.dateGold?.substring(0, 5).toString())
+//        }
+//    }else{
+//        goldPrice?.forEach { item ->
+//            listData.add(item.priceGram24k ?: 0.0)
+//            listDate.add(item.dateGold?.substring(0, 5).toString())
+//        }
+//    }
+
+
+
+    Log.e("goldsize", listData.size.toString())
+
 
     Scaffold(
         topBar = {
@@ -93,45 +123,62 @@ fun GraphScreen(
     ) { innerPadding ->
         GraphBody(
             modifier = Modifier.padding(innerPadding),
-            goldUiState = viewModel.goldUiState
+            goldUiState = viewModel.goldUiState,
+            listData = listData,
+            listDate = listDate
         )
 
 
     }
 }
 
+
 @Composable
 fun GraphBody(
     modifier: Modifier,
-    goldUiState: GoldUiState
+    goldUiState: GoldUiState,
+    listData: List<Number>,
+    listDate: List<String>
 ) {
-    when (goldUiState) {
-        is GoldUiState.Loading -> {
-            LoadingScreen(modifier)
-        }
-        is GoldUiState.Success -> {
-            if (goldUiState.goldData.data.isNullOrEmpty()) {
-                Text(
-                    modifier = Modifier,
-                    text = "No Data",
-                    style = MaterialTheme.typography.body2
-                )
-            } else {
-                Column() {
-                    GraphGold()
-                    GoldList(modifier = modifier, itemList = goldUiState.goldData.data)
-                }
-
+    Column() {
+        GraphGold(modifier = modifier, listData = listData, listDate = listDate)
+        Text(
+            modifier = modifier.padding(top = 16.dp, start = 16.dp, bottom = 8.dp),
+            text = stringResource(id = R.string.referensi_hari_ini),
+            style = MaterialTheme.typography.h6,
+            color = Color.Gray
+        )
+        when (goldUiState) {
+            is GoldUiState.Loading -> {
+                LoadingScreen(modifier)
             }
+            is GoldUiState.Success -> {
+                if (goldUiState.goldData.data.isNullOrEmpty()) {
+                    Text(
+                        modifier = Modifier,
+                        text = "No Data",
+                        style = MaterialTheme.typography.body2
+                    )
+                } else {
+
+
+                    GoldList(modifier = modifier, itemList = goldUiState.goldData.data)
+
+                }
+            }
+            is GoldUiState.Error -> {}
         }
-        is GoldUiState.Error -> {}
     }
 
 
 }
 
 @Composable
-fun GraphGold() {
+fun GraphGold(
+    modifier: Modifier,
+    listData: List<Number>,
+    listDate: List<String>
+) {
     val style = LineGraphStyle(
         visibility = LinearGraphVisibility(
             isHeaderVisible = true,
@@ -146,16 +193,23 @@ fun GraphGold() {
             fillGradient = Brush.verticalGradient(
                 listOf(colorResource(id = R.color.blue_200), Color.Transparent)
             )
-        )
+        ),
+     height = 400.dp,
+     paddingValues = PaddingValues(16.dp)
     )
-    Box(modifier = Modifier.fillMaxWidth()) {
+    Box(modifier = modifier
+        .fillMaxWidth()
+        .fillMaxHeight(0.4f)
+        .padding(8.dp)) {
+
         val clickedValue: MutableState<Pair<Any, Any>?> =
             rememberSaveable { mutableStateOf(null) }
+
         LineGraph(
-            xAxisData = listOf("Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat").map {
+            xAxisData = listDate.map {
                 GraphData.String(it)
             }, // xAxisData : List<GraphData>, and GraphData accepts both Number and String types
-            yAxisData = listOf(200, 40, 60, 450, 700, 30, 50),
+            yAxisData = listData,
             style = style,
             onPointClicked = {
                 clickedValue.value = it
@@ -163,13 +217,13 @@ fun GraphGold() {
         )
         clickedValue.value?.let {
             Row(
-                modifier = Modifier
+                modifier = modifier
                     .padding(all = 25.dp)
             ) {
-                Text(text = "Price: ", color = Color.Gray)
+                Text(text = "Price: ", color = Color.Black)
                 Text(
-                    text = "${it.first}, ${it.second}",
-                    color = colorResource(id = R.color.yellow_500),
+                    text = currencyId(it.second.toString()),
+                    color = colorResource(id = R.color.yellow_700),
                     fontWeight = FontWeight.SemiBold
                 )
             }
@@ -189,12 +243,6 @@ fun LoadingScreen(modifier: Modifier) {
     ) {
         Column(horizontalAlignment = Alignment.CenterHorizontally) {
             CircularProgressIndicator()
-            Text(
-                modifier = modifier.padding(top = 8.dp),
-                text = "Loading...",
-                style = MaterialTheme.typography.h6,
-                color = Color.Black
-            )
         }
 
 
@@ -249,10 +297,12 @@ fun GoldItem(
                     .weight(1f)
                     .padding(start = 8.dp)
             ) {
-                Row(modifier = modifier.fillMaxWidth(),
-                    verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    modifier = modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
                     Text(
-                        modifier=modifier.weight(1f),
+                        modifier = modifier.weight(1f),
                         text = gold.name ?: "Emas",
                         style = MaterialTheme.typography.h5,
                         color = colorResource(id = R.color.yellow_700)
@@ -362,7 +412,9 @@ fun GraphPreview() {
                         )
                     )
 
-                )
+                ),
+                listData = listOf(100, 40, 60, 450, 460, 30, 50),
+                listDate = listOf("Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat")
             )
 
 
