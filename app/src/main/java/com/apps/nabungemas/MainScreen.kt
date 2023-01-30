@@ -1,30 +1,24 @@
 package com.apps.nabungemas
 
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
-import androidx.compose.material.MaterialTheme.colors
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.apps.nabungemas.ui.SplashScreen
 import com.apps.nabungemas.ui.navigation.BottomNav
 import com.apps.nabungemas.ui.navigation.NavItem
 import com.apps.nabungemas.ui.navigation.NavigationGraph
@@ -103,7 +97,7 @@ fun MainTopAppBar(
                         tint = Color.White
                     )
                 }
-//
+
             },
             colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                 containerColor = Color(0xFFffd740))
@@ -122,7 +116,7 @@ fun MainTopAppBar(
 @Composable
 fun MainTopAppBar(){
     MyApplicationTheme(darkTheme = false) {
-        Column() {
+        Column {
             MainTopAppBar(title = "Top Bar", version = 0, navigateUp = {})
             MainTopAppBar(title = "Top Bar", version = 1, navigateUp = {})
             MainTopAppBar(title = "Top Bar", version = 2, navigateUp = {})

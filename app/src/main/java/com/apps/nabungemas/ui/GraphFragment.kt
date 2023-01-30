@@ -1,10 +1,5 @@
 package com.apps.nabungemas.ui
 
-import android.os.Bundle
-import android.util.Log
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -12,8 +7,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.SnackbarDefaults.backgroundColor
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,16 +18,12 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.modifier.modifierLocalConsumer
-import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.fragment.app.Fragment
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.apps.nabungemas.MainTopAppBar
 import com.apps.nabungemas.R
@@ -40,78 +33,21 @@ import com.apps.nabungemas.utils.CurrencyAmount.currencyId
 import com.apps.nabungemas.utils.Time
 import com.apps.nabungemas.viewmodel.GoldUiState
 import com.apps.nabungemas.viewmodel.GoldViewModel
-import com.jaikeerthick.composable_graphs.color.*
+import com.jaikeerthick.composable_graphs.color.LinearGraphColors
 import com.jaikeerthick.composable_graphs.composables.LineGraph
 import com.jaikeerthick.composable_graphs.data.GraphData
 import com.jaikeerthick.composable_graphs.style.LineGraphStyle
 import com.jaikeerthick.composable_graphs.style.LinearGraphVisibility
 
 
-//class GraphFragment : Fragment() {
-////    private var _binding: FragmentGraphBinding? = null
-////    private val binding get() = _binding!!
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        // Inflate the layout for this fragment
-////        _binding= FragmentGraphBinding.inflate(inflater,container,false)
-////        val view = binding.root
-////        return view
-//        return ComposeView(requireContext()).apply {
-//            setContent {
-//                MyApplicationTheme(darkTheme = false) {
-//                    GraphScreen()
-//                }
-//            }
-//        }
-//    }
-//
-////    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-////        super.onViewCreated(view, savedInstanceState)
-////        viewLifecycleOwner.lifecycleScope.launch {
-////            val data = GoldPriceApi.retrofitService.getPrice()
-////            binding.text.text = data.toString()
-////        }
-//
-////    }
-//
-//}
 @Composable
 fun GraphScreen(
     viewModel: GoldViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    val goldPrice by viewModel.golPriceState.collectAsStateWithLifecycle(null)
     val listData = remember { viewModel.itemGoldPrice }
     val listDate = remember {
         viewModel.itemGoldDate
     }
-//    val listData = remember { mutableStateListOf(0.0) }
-//    val listDate = remember {
-//        mutableStateListOf("start")
-//    }
-//
-//    if (goldPrice.isNullOrEmpty()) {
-//        listData.add(0.0)
-//        listDate.add("last")
-//    } else if(goldPrice?.size!! == 1) {
-//        goldPrice?.forEach { item ->
-//            listData.add(item.priceGram24k ?: 0.0)
-//            listDate.add(item.dateGold?.substring(0, 5).toString())
-//        }
-//    }else{
-//        goldPrice?.forEach { item ->
-//            listData.add(item.priceGram24k ?: 0.0)
-//            listDate.add(item.dateGold?.substring(0, 5).toString())
-//        }
-//    }
-
-
-
-    Log.e("goldsize", listData.size.toString())
-
-
     Scaffold(
         topBar = {
             MainTopAppBar(
@@ -140,7 +76,7 @@ fun GraphBody(
     listData: List<Number>,
     listDate: List<String>
 ) {
-    Column() {
+    Column {
         GraphGold(modifier = modifier, listData = listData, listDate = listDate)
         Text(
             modifier = modifier.padding(top = 16.dp, start = 16.dp, bottom = 8.dp),
@@ -208,7 +144,7 @@ fun GraphGold(
         LineGraph(
             xAxisData = listDate.map {
                 GraphData.String(it)
-            }, // xAxisData : List<GraphData>, and GraphData accepts both Number and String types
+            },
             yAxisData = listData,
             style = style,
             onPointClicked = {
@@ -260,7 +196,7 @@ fun GoldList(
     modifier: Modifier,
     itemList: List<GoldUpdatePrice>
 ) {
-    LazyColumn() {
+    LazyColumn {
         items(items = itemList) {
             GoldItem(modifier = modifier, gold = it)
         }

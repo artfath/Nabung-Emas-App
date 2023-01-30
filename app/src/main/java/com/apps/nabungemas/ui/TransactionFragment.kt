@@ -28,69 +28,6 @@ import com.apps.nabungemas.utils.CurrencyAmount.currencyId
 import com.apps.nabungemas.viewmodel.TransactionViewModel
 
 
-//class TransactionFragment : Fragment() {
-////    private val viewModel: TransactionViewModel by activityViewModels {
-////        TransactionViewModelFactory(
-////            (activity?.application as DataApplication).database.transactionDao()
-////        )
-////    }
-////    private var _binding: FragmentTransactionBinding? = null
-////    private val binding get() = _binding!!
-//
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        // Inflate the layout for this fragment
-////        _binding = FragmentTransactionBinding.inflate(inflater,container,false)
-////        val view = binding.root
-////        return view
-//        return ComposeView(requireContext()).apply {
-//            setContent {
-//                MyApplicationTheme(darkTheme = false) {
-//                    TransactionScreen()
-//                }
-//            }
-//        }
-//    }
-//
-////    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-////        super.onViewCreated(view, savedInstanceState)
-////        val adapter = TransactionListAdapter()
-////
-////
-////        viewModel.allTransaction.observe(viewLifecycleOwner, {
-////            adapter.submitList(it)
-////        })
-////        binding.apply {
-////            rvTransaction.setHasFixedSize(true)
-////            rvTransaction.adapter = adapter
-////        }
-////        topMenu()
-////
-////    }
-////
-////    private fun topMenu() {
-////        binding.toolbar.setOnMenuItemClickListener {
-////            when (it.itemId) {
-////                R.id.add -> {
-////                    findNavController().navigate(R.id.action_transactionFragment_to_addTransactionFragment)
-////                    true
-////                }
-////                else -> false
-////            }
-////        }
-////    }
-////
-////    override fun onDestroyView() {
-////        super.onDestroyView()
-////        _binding = null
-////    }
-//
-//
-//}
-
 @Composable
 fun TransactionScreen(
     navigateToAddTransaction: () -> Unit,
@@ -122,32 +59,38 @@ fun TransactionScreen(
 fun TransactionBody(
     itemList: List<TransactionTable>?,
     modifier: Modifier,
-    onDeletedItem:(TransactionTable)->Unit
+    onDeletedItem: (TransactionTable) -> Unit
 ) {
     Column(modifier = modifier.fillMaxHeight()) {
         if (itemList.isNullOrEmpty()) {
-            Box(modifier = modifier.fillMaxSize()
-                .background(color = Color.White),
-                contentAlignment = Alignment.Center) {
+            Box(
+                modifier = modifier
+                    .fillMaxSize()
+                    .background(color = Color.White),
+                contentAlignment = Alignment.Center
+            ) {
                 Text(text = "No Data", style = MaterialTheme.typography.h6)
             }
         } else {
-            TransactionList(modifier = modifier,
+            TransactionList(
+                modifier = modifier,
                 itemList = itemList,
-                onDeletedItem = onDeletedItem)
+                onDeletedItem = onDeletedItem
+            )
         }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TransactionList(modifier: Modifier,
-                    itemList: List<TransactionTable>,
-                    onDeletedItem:(TransactionTable)->Unit
+fun TransactionList(
+    modifier: Modifier,
+    itemList: List<TransactionTable>,
+    onDeletedItem: (TransactionTable) -> Unit
 ) {
     val dismissState = rememberDismissState()
-    LazyColumn() {
-        items(items = itemList, key = {it.id}) {
+    LazyColumn {
+        items(items = itemList, key = { it.id }) {
             TransactionItem(modifier = modifier, it, onDeletedItem = onDeletedItem)
         }
 
@@ -158,7 +101,7 @@ fun TransactionList(modifier: Modifier,
 fun TransactionItem(
     modifier: Modifier,
     transaction: TransactionTable,
-    onDeletedItem:(TransactionTable)->Unit
+    onDeletedItem: (TransactionTable) -> Unit
 ) {
     var deleteConfirm by rememberSaveable { mutableStateOf(false) }
     Box(
@@ -180,11 +123,13 @@ fun TransactionItem(
                 painter = painterResource(id = R.drawable.ic_transaction),
                 contentDescription = ""
             )
-            Column(modifier = modifier
-                .padding(6.dp)
-                .weight(1f)) {
+            Column(
+                modifier = modifier
+                    .padding(6.dp)
+                    .weight(1f)
+            ) {
                 Text(text = transaction.savingCategory, style = MaterialTheme.typography.h6)
-                Row() {
+                Row {
                     Text(
                         modifier = modifier,
                         text = transaction.time,
@@ -197,7 +142,7 @@ fun TransactionItem(
                         style = MaterialTheme.typography.body1
                     )
                 }
-                Row() {
+                Row {
                     Text(
                         modifier = modifier,
                         text = transaction.product,
@@ -207,7 +152,10 @@ fun TransactionItem(
                     Spacer(modifier = modifier.weight(1f))
                     Text(
                         modifier = modifier,
-                        text = stringResource(id = R.string.gold_weight,transaction.goldQuantity.toString()),
+                        text = stringResource(
+                            id = R.string.gold_weight,
+                            transaction.goldQuantity.toString()
+                        ),
                         style = MaterialTheme.typography.body2,
                         color = colorResource(id = R.color.blue_700)
                     )
@@ -224,23 +172,20 @@ fun TransactionItem(
                     contentDescription = ""
                 )
             }
-            if(deleteConfirm){
+            if (deleteConfirm) {
                 DeletedConfirmationAlert(modifier = modifier,
                     onCorfirm = {
                         deleteConfirm = false
-                        if(it){
+                        if (it) {
                             onDeletedItem(transaction)
                         }
-                })
+                    })
             }
 
         }
     }
 
 }
-
-
-
 
 
 @Preview(showBackground = true)
@@ -278,8 +223,13 @@ fun TransactionPreview() {
         { innerPadding ->
             TransactionBody(
                 itemList = listOf(
-                    TransactionTable(id = 0, savingCategory = "Tabungan Menikah", product = "antam"),
-                    TransactionTable(id = 1, savingCategory = "Tabungan Rumah", product = "UBS")),
+                    TransactionTable(
+                        id = 0,
+                        savingCategory = "Tabungan Menikah",
+                        product = "antam"
+                    ),
+                    TransactionTable(id = 1, savingCategory = "Tabungan Rumah", product = "UBS")
+                ),
                 modifier = Modifier.padding(innerPadding),
                 onDeletedItem = {}
             )

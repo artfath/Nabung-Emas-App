@@ -1,10 +1,5 @@
 package com.apps.nabungemas.ui
 
-import android.os.Bundle
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -17,12 +12,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -33,36 +25,6 @@ import com.apps.nabungemas.R
 import com.apps.nabungemas.ui.theme.MyApplicationTheme
 
 
-//class AboutFragment : Fragment() {
-////    private var _binding:FragmentAboutBinding? = null
-////
-////    private val binding get() = _binding!!
-//
-//
-//    override fun onCreateView(
-//        inflater: LayoutInflater, container: ViewGroup?,
-//        savedInstanceState: Bundle?
-//    ): View? {
-//        // Inflate the layout for this fragment
-////        _binding= FragmentAboutBinding.inflate(inflater,container,false)
-////        val view = binding.root
-////        return view
-//        return ComposeView(requireContext()).apply {
-//            setContent {
-//                MyApplicationTheme(darkTheme = false) {
-//                    AboutScreen()
-//                }
-//            }
-//        }
-//    }
-//
-////    override fun onDestroyView() {
-////        super.onDestroyView()
-////        _binding = null
-////    }
-//
-//
-//}
 @Composable
 fun AboutScreen(){
     Scaffold(

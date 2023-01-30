@@ -1,6 +1,5 @@
 package com.apps.nabungemas.ui
 
-import android.content.Context
 import android.view.animation.OvershootInterpolator
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween

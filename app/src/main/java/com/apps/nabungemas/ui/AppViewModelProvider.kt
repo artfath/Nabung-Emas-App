@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
-import androidx.startup.Initializer
 import com.apps.nabungemas.DataApplication
 import com.apps.nabungemas.viewmodel.GoldViewModel
 import com.apps.nabungemas.viewmodel.TransactionViewModel

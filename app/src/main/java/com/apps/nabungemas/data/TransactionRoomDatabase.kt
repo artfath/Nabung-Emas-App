@@ -28,10 +28,6 @@ abstract class TransactionRoomDatabase : RoomDatabase() {
                     .fallbackToDestructiveMigration()
                     .build()
                     .also { INSTANCE = it }
-
-//                INSTANCE = instance
-//
-//                return instance
             }
         }
     }

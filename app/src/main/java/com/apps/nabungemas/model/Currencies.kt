@@ -14,10 +14,5 @@ data class Currencies(
 
 )
 
-data class ExchangeRates(
-    @Json(name = "IDR")
-    val currencyIDR: Double
-)
-
 
 

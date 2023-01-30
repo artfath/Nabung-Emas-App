@@ -6,7 +6,6 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.apps.nabungemas.DataApplication
 import com.apps.nabungemas.data.GoldCurrencyTable
-import com.apps.nabungemas.data.TransactionRoomDatabase
 import com.apps.nabungemas.network.CurrencyApi
 import com.apps.nabungemas.network.GoldApi
 import com.apps.nabungemas.worker.WorkerConstant.TROY_OUNCE_GRAM
